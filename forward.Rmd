@@ -1,0 +1,87 @@
+# Forward Mode
+
+The forward-mode automatic differentiation algorithm, also known as
+the tangent method, is a means for efficiently computing derivatives
+of smooth functions $f:\mathbb{R} \rightarrow \mathbb{R}^M$
+with a single input and multiple outputs.
+
+Suppose $x \in \mathbb{R}$ and that $v = f(u)$.  We write a
+dot over an expression to indicate a derivative with respect to a
+variable $x$,
+$$
+\dot{u} = \frac{\partial}{\partial x} u.
+$$
+The term $\dot{u}$ is called the tangent of $u$ with respect to $x$;
+the $x$ is implicit in the notation, but assumed to be the same $x$ in
+expressions with multiple dotted expressions.
+
+For example, if $v = -u$, then by the chain rule,
+$$
+\dot{v}
+= \frac{\partial}{\partial x} v
+= \frac{\partial}{\partial x} -u
+= - \frac{\partial}{\partial x} u
+= -\dot{u}.
+$$
+Similarly, if we have $v = \exp(u)$, then
+$$
+\dot{v}
+= \frac{\partial}{\partial x} v
+= \frac{\partial}{\partial x} \exp(u)
+= \exp(u) \cdot \frac{\partial}{\partial x} u
+= \exp(u) \cdot \dot{u}.
+$$
+
+Derivative propagatin in forward mode works the same way for
+multivariate functions.  For example, if $y = u \cdot v$ is a product,
+the usual derivative rule for products applies,
+$$
+\dot{y}
+= \frac{\partial}{\partial x} u \cdot v
+= \left( \frac{\partial}{\partial x} u \right) \cdot v
++ u \cdot \left( \frac{\partial}{\partial x} v \right)
+= \dot{u} \cdot v + u \cdot \dot{v}.
+$$
+
+## Dual numbers
+
+Forward-mode automatic differentiation may be formalized using dual
+numbers consisting of the value of an expression and its derivative,
+$\langle u, \dot{u} \rangle.$  Smooth functions may then be extended
+to operate on dual numbers.  For example, negation is defined for dual
+numbers by
+$$
+-\langle u, \dot{u}\rangle = \langle -u, -\dot{u} \rangle.
+$$
+For sums,
+$$
+\langle u, \dot{u} \rangle + \langle v, \dot{v} \rangle
+= \langle u + v, \dot{u} + \dot{v} \rangle,
+$$
+and for differences
+$$
+\langle u, \dot{u} \rangle - \langle v, \dot{v} \rangle
+= \langle u - v, \dot{u} - \dot{v} \rangle,
+$$
+For products,
+$$
+\langle u, \dot{u} \rangle \cdot \langle v, \dot{v} \rangle
+= \langle u \cdot v, \dot{u} \cdot v + u \cdot \dot{v} \rangle
+$$
+and for quotients,
+$$
+\langle u, \dot{u} \rangle / \langle v, \dot{v} \rangle
+= \langle u / v, \dot{u} / v - u / v^2 \cdot \dot{v} \rangle.
+$$
+For exponentiation,
+$$
+\exp\left( \langle u, \dot{u} \rangle \right)
+= \langle \exp(u), \exp(u) \cdot \dot{u}\rangle,
+$$
+and for the logarithm,
+$$
+\log \langle u, \dot{u} \rangle
+=
+\langle \log u, \frac{1}{u} \cdot \dot{u} \rangle.
+$$
+These all translate directly into rules of tangent propagation.

@@ -1,0 +1,11 @@
+delete_merged_file: FALSE
+new_session: FALSE
+before_chapter_script: "before-chapter.R"
+rmd_files: [
+  "index.Rmd",
+  "introduction.Rmd",
+  "forward.Rmd",
+  "reverse.Rmd",
+  "scalars.Rmd",
+  "cpp-implementation.Rmd"
+]

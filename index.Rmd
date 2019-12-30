@@ -1,0 +1,23 @@
+---
+knit: 'bookdown::render_book("index.Rmd", "tufte_html_book")'
+title: 'Automatic Differentiation Handbook'
+author: 'Bob Carpenter, editor'
+date: '2019'
+output:
+  bookdown::tufte_html_book:
+    split_by: chapter
+    toc_depth: 1
+  bookdown::tufte_book:
+    latex_engine: "pdflatex"
+    includes:
+      in_header: header.tex
+    toc:
+      collapse: section
+    fontsize: 11pt
+---
+
+# Preface {-}
+
+This book provides an overview of automatic differentiation along with
+rules for forward- and backward-mode differentiation of widely used
+scalar, vector, matrix, and probability functions.

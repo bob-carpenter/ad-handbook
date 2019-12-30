@@ -1,0 +1,368 @@
+# Appendix: Reference C++ Implementations
+
+## Forward-mode automatic differentiation in C++
+
+Forward-mode automatic differentiation can be implemented directly in
+C++ following the pattern established in the standard library for
+complex numbers.  A forward-mode autodiff variable is represented by a
+dual number holding two scalar values, a constructor where the second
+value defaults to zero, and getters for the value and tangent.
+```
+namespace autodiff {
+template <typename T>
+class dual {
+  T val_;
+  T tan_;
+ public:
+  dual(const T& val, const T& tan = 0)
+      : val_(val), tan_(tan) { }
+  const T& val() const { return val_; }
+  const T& tan() const { return tan_; }
+};
+}
+```
+The type of value is templated to allow flexible usage not only with
+respect to primitives, but with respect to nested automatic
+differentiation.  The default copy constructor `dual(const dual<T>&)`,
+destructor `~dual()`, and assignment operator `operator=(const
+dual<T>&)` are sufficient.
+
+Dual numbers are constructed from either a value and
+tangent, or just a value, with the tangent defaulting to zero.
+```
+using autodiff::dual;
+dual<double> a(2.2, -3.1);
+dual<double> b(5);
+```
+The first has a value of 2.2 and a tangent of -3.1, whereas the second
+has a value of 5 and a tangent of 0 (the default).
+
+The constructor is not declared implicit and thus will support the
+assignment of primitives with default tangent values.  The assignments
+```
+dual<double> c = 5;
+```
+and
+```
+dual<double> d = dual<double>(5);
+```
+both invoke the default copy assignment operator `operator=(const
+dual<double>&)`; the former promotes `5` to `dual<double>(5)` using
+the non-explicit unary constructor.
+
+Functions and operators are coded in the same namespace as the
+autodiff variable class, following the dual arithmetic.
+```
+#include <cmath>
+namespace autodiff {
+template <typename T>
+inline dual<T> exp(const dual<T>& x) {
+  using std::exp;
+  T y = exp(x.val());
+  return dual(y, x.tan() * y);
+}
+template <typename T>
+inline dual<T> log(const dual<T>& x) {
+  using std::log;
+  T y = log(x.val());
+  return dual(y, x.tan() / y );
+}
+}
+```
+The standard library `cmath` is required for definitions of `exp` and
+`log` for primitive values.  The function definitions begin with using
+statements, e.g., `using std::exp`.  This allows the `exp` defined in
+the standard library `cmath` to be used for primitives and the `exp`
+defined for type `T` to be found by argument-dependent lookup for
+non-primitive value types `T`.
+
+Binary operations can be implemented following the dual number
+definitions.
+```
+namespace autodiff {
+template <typename T>
+inline dual<T> operator*(const dual<T>& x1, const dual<T>& x2) {
+  return dual(x1.val() * x2.val(),
+              x1.tan() * x2.val() + x1.val() * x2.tan());
+}
+}
+```
+This suffices for the case where both arguments are autodiff variables,
+```
+dual<double> x1 = -1.3;
+dual<double> x2 = 2.1;
+dual<double> u = x1 * x2;
+```
+There is no need to explicitly bring in `autodiff::operator+` because it is
+included implicitly by argument-dependent lookup.
+
+The following statements which mix autodiff variables and primitives
+will not match the templated `operator*` because the primitive argment
+types do not match the template.
+```
+dual<double> u = 1.2;
+dual<double> v = u * 3.2;
+dual<double> w = 2 * u;
+```
+The operator can be further overloaded in order to support these mixed types.
+```
+#include <type_traits>
+namespace autodiff {
+template <typename T, typename U,
+          typename = std::enable_if_t<std::is_arithmetic_v<U>>>
+inline dual<T> operator*(const dual<T>& x1, const U& c2) {
+  return dual(x1.val() * c2, x1.tan() * c2);
+}
+template <typename T, typename U,
+          typename = std::enable_if_t<std::is_arithmetic_v<U>>>
+inline dual<T> operator*(const U& c1, const dual<T>& x2) {
+  return dual(c1 * x2.val(), c1 * x2.tan());
+}
+}
+```
+The third template argument is a C++ idiom preventing a match of the
+template function unless `U` is a primitive; the functions `enable_if_t`
+and `is_arithmetic_v` are declared in the standard library header
+`<type_traits>`.
+
+## Reverse-mode automatic differentiation in C++
+
+Like forward mode, reverse-mode automatic differentiation can be
+implemented through operator overloading in C++, using
+argument-dependent lookup to allow templated code to just work with
+autodiff variables.
+
+A template using statement will reduce the boilerplate in requiring
+arithmetic arguments.
+```
+#include <type_traits>
+namespace autodiff {
+template <typename T>
+using enable_if_arithmetic_t
+= std::enable_if_t<std::is_arithmetic_v<T>>;
+}
+```
+
+The core code for reverse-mode autodiff defines a class `adj` used to
+store values and an index that will be unique for each subexpression.
+```
+#include <cstddef>
+namespace autodiff {
+std::size_t next_ = 0;
+
+class adj {
+  double val_;
+  std::size_t idx_;
+ public:
+  template <typename T, typename = enable_if_arithmetic_t<T>>
+  adj(T val = 0, int idx = next_++)
+    : val_(val), idx_(idx) { }
+  double value() const { return val_; }
+  double index() const { return idx_; }
+};
+}
+```
+The global counter `next_` is used to assign unique identifiers in
+sequence to each autodiff variable as it is constructed, so it must be
+initialized to zero before any autodiff calculations.  The autodiff
+vaiable class `adj` holds a double precision value and a unique
+index.  The constructor is responsible for generating indexes and
+storing values.  The default copy constructor, assignment operator,
+and destructor suffice here.
+
+
+Usage is similar to that of forward-mode autodiff variables.
+```
+using autodiff:adj;
+autodiff::next_ = 0;    // initialize stack before starting
+adj x(3.7);   // construct from value
+```
+The constructor call for `x` allocates a unique index and increments
+the global index counter.  Assignment of arithmetic values works by
+promotion using the implicit constructor, so that
+```
+adj y = 2.9;  // assignment works by promoting
+```
+is equivalent to
+```
+adj y = adj(2.9);
+```
+
+In order to carry out reverse-mode automatic differentiation, each
+expression must create and store a continuation used to propagate
+adjoints from the result to the operands in the reverse sweep.  In the
+reference implementation, these continuations are pushed ont a global
+stack as they are created.
+```
+#include <vector>
+#include <functional>
+namespace autodiff {
+std::vector<std::function<void(std::vector<double>&)>> stack_;
+}
+```
+The reverse sweep is implemented by the `chain()` function, which
+takes the variable `y` from which derivatives should be propagated.
+```
+namespace autodiff {
+std::vector<double> chain(const adj& y) {
+  std::vector<double> adjoints(y.idx() + 1, 0);
+  adjoints[y.idx()] = 1;
+  for (auto chain_f = stack_.crbegin();
+       chain_f != stack_.crend();
+       ++chain_f)
+    (*chain_f)(adjoints);
+  return adjoints;
+}
+}
+```
+
+First, the vector `adjoints` of adjoint values is allocated at
+size `y.idx_ + 1` so that it's large enough to the adjoints of every
+expression involved in the calculation of `y`;  this is guaranteed to
+be enough because every expression involved in the calculation of `y`
+has an index lower than `y`'s.  The initial values are set to zero in
+the constructor for `adjoints`.  To begin the reverse sweep, the
+adjoint for `y`, namely `adjoints[y.idx_]` is set to one.  Then the
+stack of continuations is traversed from `y` down to the independent
+variables, executing each continuation on the stack applied to the
+adjoint vector.  Finally, it returns the adjoints that are calculated
+so that derivatives may be retrieved.
+
+A simple operation like addition is overloaded as follows.
+```
+namespace autodiff {
+inline adj operator+(const adj& x1, const adj& x2) {
+  adj y(x1.val() + x2.val());
+  auto f = [=](std::vector<double>& adj) {
+    adj[x1.idx()] += adj[y.idx()];
+    adj[x2.idx()] += adj[y.idx()];
+  };
+  stack_.emplace_back(f);
+  return y;
+}
+}
+```
+First, the result `y` is constructed with value equal to adding the
+values of the arguments, `x1.val_` and `x2.val_`.  Then a continuation
+`f` for the chain rule is defined as an anoymous function using a
+lambda.  The notation `[=]` indicates that the lambda captures the
+values of variables for later execution by copying.  Here, the
+variables captured are `x1`, `x2`, and `y`.  The continuation is
+declared to take a mutable reference to a vector of double-precision
+floating point values as an argument---these hold the adjoints of all
+the subexpressions as declared in the `chain()` function.  The body of
+the continuation follows the reverse-mode adjoint rule for addition,
+namely adding the adjoint of the result `y` to the adjoint of each of
+the operands, `x1` and `x2`.  After the continuation is defined, it is
+pushed back onto the global stack.  Finally, the value `y` is
+returned.
+
+While the above code will work by promoting arithmetic values to
+the adjoint class, it is more efficient to define further overloads
+that are more specific and avoid the redundant work on the stack.
+```
+namespace autodiff {
+template <typename T, typename = enable_if_arithmetic_t<T>>
+inline adj operator+(const adj& x1, T x2) {
+  adj y(x1.val() + x2);
+  stack_.emplace_back([=](std::vector<double>& adj) {
+      adj[x1.idx()] += adj[y.idx()];
+    });
+  return y;
+}
+template <typename T, typename = enable_if_arithmetic_t<T>>
+inline adj operator+(T x1, const adj& x2) {
+  adj y(x1 + x2.val());
+  stack_.emplace_back([=](std::vector<double>& adj) {
+      adj[x2.idx()] += adj[y.idx()];
+    });
+  return y;
+}
+}
+```
+Rather than defining a temporary for the continuation, it is pushed
+directly onto the stack.  The value is computed using the value from
+the adjoint variables and the primitives directly, and the only
+propagation is to the adjoint operand.
+
+Multiplication is defined similarly, with the captured operand's
+values and indexes both being used.
+```
+namespace autodiff {
+inline adj operator*(const adj& x1, const adj& x2) {
+  adj y(x1.val() * x2.val());
+  stack_.emplace_back([=](std::vector<double>& adj) {
+      adj[x1.idx()] += x2.val() * adj[y.idx()];
+      adj[x2.idx()] += x1.val() * adj[y.idx()];
+    });
+  return y;
+}
+template <typename T, typename = enable_if_arithmetic_t<T>>
+inline adj operator*(const adj& x1, T x2) {
+  adj y(x1.val() * x2);
+  stack_.emplace_back([=](std::vector<double>& adj) {
+      adj[x1.idx()] += x2 * adj[y.idx()];
+    });
+  return y;
+}
+template <typename T, typename = enable_if_arithmetic_t<T>>
+inline adj operator*(T x1, const adj& x2) {
+  adj y(x1 * x2.val());
+  stack_.emplace_back([=](std::vector<double>& adj) {
+      adj[x2.idx()] += x1 * adj[y.idx()];
+    });
+  return y;
+}
+}
+```
+
+Non-linear functions like exponentiation also follow their
+definitions.  We need the `<cmath>` library for a
+definition of the exponential function.
+```
+#include <cmath>
+namespace autodiff {
+inline adj exp(const adj& x) {
+  adj y(std::exp(x.val()));
+  auto f = [=](std::vector<double>& adj) {
+    adj[x.idx()] += y.val() * adj[y.idx()];
+  };
+  stack_.emplace_back(f);
+  return y;
+}
+}
+```
+
+The constructor defines the value of `y` to be the value of `x`
+exponentiated.  The adjoint is incremented using the captured value of
+`y`, namely `exp(x.val_)`, which is the derivative of `y` with respect
+to `x`.
+
+The following code computes $\nabla f(10.3, -1.1)$, where $f(x_1, x_2)
+= x_1 \cdot \exp(x_2 \cdot 2) + 7$.
+```
+#include <iostream>
+int main() {
+  using autodiff::adj;
+  next_idx = 0;
+  stack_.clear();
+  adj x1 = 10.3;
+  adj x2 = -1.1;
+  adj y = x1 * exp(x2 * 2) + 7;
+  std::vector<double> adjoints = chain(y);
+  double dy_dx1 = adjoints(x1.idx_);
+  double dy_dx2 = adjoints(x2.idx_);
+  std::cout << "grad f = [" << dy_dx1 << ", " << dy_dx2 << "]" << std::endl;
+  return 0;
+}
+```
+
+First, the index counter and stack are reset.  Then the inddependent
+variables `x1` and `x2` are initialized.  The resulting dependent
+variable `y` is computed as a single expression and is also of
+autodiff variable type.  The definitions of `operator*`, `operator+`,
+and `exp()` are found through argument-dependent lookup.  Next, the
+reverse sweep is carried out starting from the result `y` using the
+`chain()` function.  The resulting adjoints for `x1` and `x2` are
+found by indexing the vector of adjoints returned by `chain().`  These
+are then printed and the default success code (zero) is returned.

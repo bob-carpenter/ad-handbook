@@ -1,0 +1,219 @@
+# Derivatives
+
+Applications of derivatives, which measure the change in one quantity
+relative to a change in anoher quantity, are ubiquitous in applied
+mathematics.  This present text is motivated by statistical inference
+algorithms that use first and second-order derivatives, e.g.,
+
+* quasi-Newton optimization for penalized maximum likelihood
+estimation (first-order derivatives with approximate second-order
+derivatives),
+* Laplace approximation for standard errors and approximate Bayesian
+posteriors (second-order derivatives),
+* Hamiltonian Monte Carlo sampling for Bayesian posterior inference
+(first-order derivatives with Euclidean geometry and up to third-order
+derivatives with Riemannian geometry), and
+* stochastic gradient descent for nested expectations in variational
+inference (Monte Carlo samples of first-order derivatives).
+
+## Smooth functions
+
+A smooth function is one that is continuously differentiable over its
+domain.  Unless explicitly stated, all functions under consideration
+are differentiable as many times as necessary.
+
+## Derivatives
+
+Consider a smooth, univariate function $f:\mathbb{R}
+\rightarrow \mathbb{R}.$  Its derivative function, $f':\mathbb{R} \rightarrow
+\mathbb{R}$, maps a scalar $x \in \mathbb{R}$ to the derivative of
+$f(x)$ with respect to $x$, and is defined as a limit
+$$
+f'(x)
+= \frac{\textrm{d}}{\textrm{d}x}f(x)
+= \lim_{\epsilon \rightarrow 0} \frac{f(x + \epsilon) - f(x)}{\epsilon},
+$$
+where the numerator is the change in $y = f(x)$ and the denominator is
+the change in $x$.
+
+Rewriting the expression for the derivative,
+$$
+\lim_{\epsilon \rightarrow 0}
+\frac{f(x + \epsilon) - (f(x) + \epsilon \cdot f'(x))}
+     {\epsilon}
+= 0.
+$$
+Thus, as $\epsilon \rightarrow 0$,
+$$
+f(x + \epsilon) \approx f(x) + \epsilon \cdot f'(x).
+$$
+
+## Chain rule
+
+Automatic differentiation is driven by the chain rule, which states
+that
+
+$$
+\frac{\partial}{\partial x} f(u)
+= \frac{\partial}{\partial u} f(u)
+\cdot \frac{\partial}{\partial x} u
+= f'(u) \cdot \frac{\partial}{\partial x} u.
+$$
+Including the differentiated function in the denominator makes the
+relationship clearer,
+$$
+\frac{\partial f(u)}{\partial x}
+=
+\frac{\partial f(u)}{\partial u}
+\cdot
+\frac{\partial u}{\partial x}.
+$$
+
+
+
+## Partial derivatives
+
+For a function $f:\mathbb{R}^N \rightarrow \mathbb{R}$, the partial
+derivative with respect to $x_n$ at $x \in \mathbb{R}^N$ is
+$$
+\frac{\partial}{\partial x_n} f(x) = g'(x_n),
+$$
+where $g : \mathbb{R} \rightarrow \mathbb{R}$ is the univariate
+function defined by
+$$
+g(u) = f(x_1, \ldots, x_{n-1}, u, x_{n+1}, \ldots, x_N).
+$$
+That is, we differentiate $f(x)$ with respect to $x_n$, holding all
+other values $x_1, \ldots, x_{n - 1}, x_{n + 1}, \ldots, x_N$
+constant.
+
+## Gradients
+
+Consider a smooth, vector function $f:\mathbb{R}^N \rightarrow
+\mathbb{R}.$ Its gradient function, $\nabla f:\mathbb{R}^N \rightarrow
+\mathbb{R}^N,$ maps a vector $x \in \mathbb{R}^N$ to the vector of
+partial derivatives of $f(x)$,
+$$
+\nabla f(x) =
+\begin{bmatrix}
+\frac{\partial}{\partial x_1} f(x)
+& \cdots &
+\frac{\partial}{\partial x_N} f(x)
+\end{bmatrix}.
+$$
+The notation indicates that the result is a $1 \times N$ row vector.
+
+The notation $\nabla^{\top} f$ indicates the function which transposes
+the results of $\nabla f$ to produce column vectors, i.e.,
+$$
+\nabla^{\top} f(x)
+= \left( \nabla f(x) \right)^{\top}
+= \begin{bmatrix}
+\frac{\partial}{\partial x_1} f(x)
+\\
+\vdots
+\\
+\frac{\partial}{\partial x_N} f(x)
+\end{bmatrix}.
+$$
+
+## Jacobians
+
+Consider a smooth multivariate function $f:\mathbb{R}^N \rightarrow
+\mathbb{R}^M$.  Its Jacobian function, $J_f:\mathbb{R}^N \rightarrow
+\left( \mathbb{R}^N \times \mathbb{R}^M\right),$ maps a vector $x \in
+\mathbb{R}^N$ to the $M \times N$ matrix of partial derivatives of
+each element of $f(x)$ with respect to each $x_n$,
+$$
+J_f(x) = \frac{\partial}{\partial x}f(x).
+$$
+Row $m$ of the Jacobian matrix is a gradient for a single output,
+and the entries make up all of the partial derivatives of $f$,
+$$
+J_f(x) =
+\begin{bmatrix}
+\nabla f_1(x)
+\\
+\vdots
+\\
+\nabla f_M(x)
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{\partial}{\partial x_1} f_1(x)
+& \cdots &
+\frac{\partial}{\partial x_N} f_1(x)
+\\
+\vdots & \vdots & \vdots
+\\
+\frac{\partial}{\partial x_1} f_M(x)
+& \cdots &
+\frac{\partial}{\partial x_N} f_M(x)
+\end{bmatrix},
+$$
+where $f_m(x)$ is defined by selecting the $m$-th element of
+$f(x)$,^[We will write $v[i]$ and $v_i$ interchangeably for the
+$i$-th element of vector $v$, and similarly for $m[i, j]$ and
+$m_{i,j}$ for the elements of matrices.]
+$$
+f_m(x) = f(x)[m].
+$$
+Elementwise, the entries of the Jacobian are
+$$
+J_f(x)[m, n] = \frac{\partial}{\partial x_n}f_m(x).
+$$
+
+## Hessians
+
+Consider a smooth multivariate function $f : \mathbb{R}^N \rightarrow
+\mathbb{R}$ of a single output.  The Hessian function $H_f$ maps an
+element $x \in \mathbb{R}^N$ to its matrix of second derivatives, and
+is defined by applying the gradient operator twice (with a
+transposition in between),
+$$
+H_f(x)
+=
+\nabla \nabla^{\top} f(x)
+=
+\nabla
+\begin{bmatrix}
+\frac{\partial}{\partial x_1} f(x)
+\\
+\vdots
+\\
+\frac{\partial}{\partial x_N} f(x)
+\end{bmatrix}
+=
+\begin{bmatrix}
+\nabla \frac{\partial}{\partial x_1} f(x)
+\\
+\vdots
+\\
+\nabla \frac{\partial}{\partial x_N} f(x)
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{\partial^2}{\partial x_1 \partial x_1} f(x)
+& \cdots &
+\frac{\partial^2}{\partial x_1 \partial x_N} f(x)
+\\
+\vdots & \vdots & \vdots
+\\
+\frac{\partial^2}{\partial x_N \partial x_1} f(x)
+& \cdots &
+\frac{\partial^2}{\partial x_N \partial x_N} f(x)
+\end{bmatrix}.
+$$
+Elementwise, the entries in the Hessian evaluated at $x$ are
+$$
+H_f(x)[m, n]
+= \frac{\partial^2}{\partial x_m \partial x_n} f(x)
+= \frac{\partial}{\partial x_m} \frac{\partial}{\partial x_n} f(x).
+$$
+The Hessian matrix is symmetric, with $H_f(x)[m, n] = H_f(x)[n, m]$.
+The diagonals are the second partial derivatives,
+$$
+H_f(x)[n, n]
+= \frac{\partial}{\partial x_n} \frac{\partial}{\partial x_n} f(x)
+= \frac{\partial^2}{\partial x_n^2} f(x).
+$$

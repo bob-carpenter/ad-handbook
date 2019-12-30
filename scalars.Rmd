@@ -1,0 +1,59 @@
+# Arithmetic Functions
+
+## Addition
+
+$$
+c = a + b
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c  = 1
+\qquad
+\frac{\partial}{\partial b} c = 1
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} + \dot{b}
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ \bar{c}
+\qquad
+\bar{b} \ {+=} \ \bar{c}
+$$
+
+
+## Subtraction
+
+$$
+c = a - b
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = 1
+\qquad
+\frac{\partial}{\partial b} c = -1
+$$
+
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} - \dot{b}
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} {+=} \bar{c}
+\qquad
+\bar{b} {+=} -\bar{c}
+$$
