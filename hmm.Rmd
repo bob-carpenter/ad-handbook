@@ -1,0 +1,118 @@
+# Hidden Markov Models
+
+A hidden Markov model (HMM) defines a density function for a
+sequence of observations $y_1, \ldots, y_N$, where
+
+* the observations are conditionally independent draws from a mixture
+distribution with $K$ components, and
+* the unobserved mixture components $z_1, \ldots, z_N \in 1:K$ form a
+Markov process.
+
+The Markov process for the mixture coponents is governed by
+
+* an initial probability simplex $\phi \in \mathbb{R}^K$,
+* stochastic matrix $\Theta \in \mathbb{R}^{K \times K}$, and
+
+with
+$$
+p(z \mid \phi, \Theta)
+= \phi_{z[1]} \cdot \prod_{n = 2}^N \theta_{z[n - 1], z[n]}.
+$$
+The sequence of observations $y$ is conditionally independent given
+$z$,
+$$
+p(y \mid z) = \prod_{n=1}^N p(y \mid z_n = k).
+$$
+The $N \times K$ emission matrix is defined by taking
+$$
+\Lambda_{n, k} = p(y \mid z_n = k).
+$$
+
+The complete data density for HMMs is
+$$
+p(y, z \mid \phi, \Theta, \Lambda)
+= \phi_{z[1]}
+\cdot \prod_{n = 2}^N \Theta_{z[n - 1], z[n]}
+\cdot \prod_{n = 1}^N \Lambda_{n, z[n]}.
+$$
+The density is defined by marginalizing out the unobserved latent
+states $z$,
+$$
+p(y \mid \phi, \Theta, \Lambda)
+= \sum_{z \in (1:K)^N} p(y, z \mid \phi, \Theta, \Lambda).
+$$
+The goal is to compute the derivatives of this function for a fixed
+observation sequence $y$ with respect to the parameters
+$\phi,$ $\Theta,$ and $\Lambda.$
+
+The direct summation is intractable because there are $K^N$ possible
+values for the sequence $z.$  The forward algorithm uses dynamic
+programming to compute the marginal likelihood in $\mathcal{O}(K^2
+\cdot N)$.  The forward algorithm is neatly derived from the matrix
+expression for the density,
+$$
+p(y \mid \phi, \theta, \Lambda)
+= \phi^{\top} \cdot \textrm{diag}(\Lambda_1)
+\cdot \Theta \cdot \textrm{diag}(\Lambda_2)
+\cdots \Theta \cdot \textrm{diag}(\Lambda_N)
+\cdot \textrm{1}
+$$
+where $\textrm{1} = \begin{bmatrix}1 & \cdots & 1\end{bmatrix}^{\top}$ is a
+vector of ones of size $K$, and
+$$
+\textrm{diag}(\Lambda_n)
+=
+\begin{bmatrix}
+\Lambda_{n, 1} & 0 & \cdots & 0
+\\
+0 & \Lambda_{n, 2} & \cdots & 0
+\\
+\vdots & \vdots & \ddots & \vdots
+\\
+0 & 0 & \cdots & \Lambda_{n, K}
+\end{bmatrix}.
+$$
+The forward algorithm is traditionally defined in terms of
+the forward vectors,
+$$
+\alpha_n
+=
+\begin{bmatrix}
+\phi^{\top} \cdot \textrm{diag}(\Lambda_1)
+& \cdots &
+\Theta \cdot \textrm{diag}(\Lambda_n)
+\end{bmatrix}^{\top},
+$$
+which are column vectors formed from the prefixes of the likelihood
+function.  A final multiplication by $\textrm{1}$ yields a means to
+compute the likelihood function.  This forward algorithm may be
+automtically differentiated and the resulting derivative calculation
+also takes $\mathcal{O}(K^2 \cdot N).$ But the constant factor and
+memory usage is high, so it is more efficient to work out derivatives
+analytically.
+
+The backward algorithm defines the backward row vectors,
+$$
+\beta_n
+=
+\begin{bmatrix}
+\Theta \cdot \textrm{diag}(\Lambda_n)
+& \cdots &
+\Theta \cdot \textrm{diag}(\Lambda_N)
+\cdot \textrm{1}
+\end{bmatrix}.
+$$
+The recursive form of the backward algorithm begins with $\beta_N,$
+then defines $\beta_{n - 1}$ in terms of $\beta_N.$
+
+Derivatives can be defied using the forward and backward terms,
+$$
+\frac{\partial}{\partial x} p(y \mid \phi, \Theta, \Lambda)
+= \frac{\partial \phi^{\top} \cdot \textrm{diag}(\Lambda_1)}
+       {\partial x}
++ \sum_{n \in 2:N}
+    \alpha_n^{\top}
+    \cdot \frac{\partial \Theta \cdot \textrm{diag}(\Lambda_{n + 1})}
+               {\partial x}
+    \cdot \beta_{n + 1}.
+$$

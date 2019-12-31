@@ -8,5 +8,6 @@ rmd_files: [
   "reverse.Rmd",
   "scalars.Rmd",
   "matrix-arithmetic.Rmd",
+  "hmm.Rmd",
   "cpp-implementation.Rmd"
 ]
