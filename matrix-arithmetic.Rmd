@@ -1,0 +1,111 @@
+# Matrix Arithmetic Functions
+
+## Addition
+
+$$
+C = A + B
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = 1
+\qquad
+\frac{\partial}{\partial B} C = 1
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \dot{A} + \dot{B}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C}
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ \overline{C}
+$$
+
+
+## Subtraction
+
+$$
+C = A - B
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = 1
+\qquad
+\frac{\partial}{\partial B} C = -1
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \dot{A} - \dot{B}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C}
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ -\overline{C}
+$$
+
+
+## Multiplication
+
+$$
+C = A \cdot B
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = B
+\qquad
+\frac{\partial}{\partial B} C = A
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \dot{A} \cdot B + A \cdot \dot{B}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C} \cdot B^{\top}
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ A^{\top} \cdot \overline{C}
+$$
+
+## Negation
+
+$$
+C = -A
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = -1
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = -\dot{A}
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ -\overline{C}
+$$

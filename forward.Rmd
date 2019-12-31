@@ -85,3 +85,66 @@ $$
 \langle \log u, \frac{1}{u} \cdot \dot{u} \rangle.
 $$
 These all translate directly into rules of tangent propagation.
+
+## Vectors and matrices
+
+
+The definitions of values and tangents remain the same when moving to
+vector or matrix functions.  If $A$ is an $M \times N$ matrix, then
+$\dot{A}$ is the $M \times N$ matrix composed of the tangents of the
+variables in $A$, i.e., $\dot{A}[i, j]$ is the tangent of matrix entry
+$A[i, j]$.
+
+The tangent rules for matrix operations carry over neatly from the
+scalar case.  For example, $C = A + B$ is the sum of two matrices, the
+corresponding tangent rule is
+$$
+\dot{C} = \dot{A} + \dot{B}.
+$$
+Here and throughout, matrices used in arithmetic operations will be
+assumed to conform to the required shape and size constraints in the
+expressions in which they are used.  For $A + B$ to be well formed,
+$A$ and $B$ must both be $M \times N$ matrices (i.e., they must have
+the same number of rows and columns).
+
+Similarly, if $C = A \cdot B$ is the product of two matrices, the
+tangent rule is the same as that for scalars,
+$$
+\dot{C} = \dot{A} \cdot B + A \cdot \dot{B}.
+$$
+
+Simple tangent rules exist for many linear algebra operations, such as
+inverse.  If $C = A^{-1}$, then the tangent rule is
+$$
+\dot{C} = -C \cdot \dot{A} \cdot C.
+$$
+Results such as these are derived through algebraic manipulation and
+differentiation (see \cite{giles:2008b} for general rules).  For
+inverse, because
+$$
+C \cdot A = A^{-1} \cdot A = \textrm{I}.
+$$
+Differentiating both sides yields
+$$
+\frac{\partial}{\partial x} C \cdot A
+=
+\frac{\partial}{\partial x} \textrm{I}.
+$$
+Replacing with dot notation yields
+$$
+\dot{C} \cdot A + C \cdot \dot{A} = 0.
+$$
+Rearranging the terms produces
+$$
+\dot{C} \cdot A = - C \cdot \dot{A}.
+$$
+Multiplying both sides of the equation on the right by $A^{-1}$ gives
+$$
+\dot{C} \cdot A \cdot A^{-1} = -C \cdot \dot{A} \cdot A^{-1}.
+$$
+This reduces to the final simplified form
+$$
+\dot{C} = -C \cdot \dot{A} \cdot C,
+$$
+after dropping the factor $A \cdot A^{-1} = \textrm{I}$ and replacing
+$A^{-1}$ with its value $C$.

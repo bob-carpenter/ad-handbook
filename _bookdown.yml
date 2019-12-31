@@ -7,5 +7,6 @@ rmd_files: [
   "forward.Rmd",
   "reverse.Rmd",
   "scalars.Rmd",
+  "matrix-arithmetic.Rmd",
   "cpp-implementation.Rmd"
 ]
