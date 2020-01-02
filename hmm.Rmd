@@ -105,14 +105,94 @@ $$
 The recursive form of the backward algorithm begins with $\beta_N,$
 then defines $\beta_{n - 1}$ in terms of $\beta_N.$
 
-Derivatives can be defied using the forward and backward terms,
+The derivative of the HMM density can be rendered as a sum of terms
+involving forward and backward variables by repeatedly applying the
+chain rule to peel pairs of terms off of the product, resulting in a
+sum
 $$
+\begin{array}{rcl}
+\displaystyle
 \frac{\partial}{\partial x} p(y \mid \phi, \Theta, \Lambda)
-= \frac{\partial \phi^{\top} \cdot \textrm{diag}(\Lambda_1)}
+& = &
+\displaystyle
+\frac{\partial}{\partial x}
+\phi^{\top} \cdot \textrm{diag}(\Lambda_1)
+\cdot \Theta \cdot \textrm{diag}(\Lambda_2)
+\cdots \Theta \cdot \textrm{diag}(\Lambda_N)
+\cdot \textrm{1}
+\\[8pt]
+& = &
+\displaystyle
+\begin{array}[t]{l}
+\displaystyle
+\left( \frac{\partial}{\partial x}
+\phi^{\top} \cdot \textrm{diag}(\Lambda_1) \right)
+\cdot \Theta \cdot \textrm{diag}(\Lambda_2)
+\cdots \Theta \cdot \textrm{diag}(\Lambda_N)
+\cdot \textrm{1}
+\\
+{ } + \displaystyle \
+\phi^{\top} \cdot \textrm{diag}(\Lambda_1)
+\cdot
+\left( \frac{\partial}{\partial x}
+    \Theta \cdot \textrm{diag}(\Lambda_2)
+    \cdots \Theta \cdot \textrm{diag}(\Lambda_N) \right)
+\end{array}
+\\[8pt]
+& = & \hfill \vdots \hfill
+\\[8pt]
+& = &
+\displaystyle
+  \left( \frac{\partial}
        {\partial x}
-+ \sum_{n \in 2:N}
-    \alpha_n^{\top}
-    \cdot \frac{\partial \Theta \cdot \textrm{diag}(\Lambda_{n + 1})}
-               {\partial x}
-    \cdot \beta_{n + 1}.
+  \phi^{\top} \cdot \textrm{diag}(\Lambda_1) \right)
+  \cdot \beta_1
++ \sum_{n = 2}^{N}
+    \alpha_{n - 1}^{\top}
+    \cdot \left( \frac{\partial}
+                      {\partial x}
+                        \Theta \cdot \textrm{diag}(\Lambda_{n})
+          \right)
+    \cdot \beta_{n}
+\end{array}
+$$
+involving the forward terms $\alpha,$ backward terms $\beta,$ and the
+derivatives of the parameters $\phi, \Theta, \Lambda.$
+
+To simplify the notation, let
+$$
+\mathcal{L} = p(y \mid \phi, \Theta, \Lambda).
+$$
+The derivative with
+respect to the initial distribution $\phi$ is
+$$
+\frac{\partial}{\partial \phi} \mathcal{L}
+=
+\textrm{diag}(\Lambda_1) \cdot \beta_1.
+$$
+
+The derivative with respect to the initial emission density
+$\Lambda_1$ is
+$$
+\frac{\partial}{\partial \Lambda_1} \mathcal{L}
+=
+\textrm{diag}(\phi) \cdot \beta_1.
+$$
+The derivative with respect to the emission density $\Lambda_n$ for
+$n > 1$ is
+$$
+\frac{\partial}{\partial \Lambda_n} \mathcal{L}
+=
+\alpha_{n - 1}^{\top} \cdot \Theta \cdot \beta_{n}.
+$$
+
+The deriative with respect to the stochastic transition matrix
+$\Theta$ is
+$$
+\frac{\partial}{\partial \Theta} \mathcal{L}
+=
+\sum_{n = 2}^N
+\alpha_{n - 1}^{\top}
+\cdot \textrm{diag}(\Lambda_{n})
+\cdot \beta_{n}.
 $$
