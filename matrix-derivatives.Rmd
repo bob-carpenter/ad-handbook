@@ -1,0 +1,168 @@
+# Matrix Derivatives
+
+If $C = f(A, B)$ where $A,$ $B,$ and $C$ are matrices (or vectors or scalars),
+the chain rule remains the same,
+$$
+\textrm{d}C
+= \frac{\partial f(A, B)}{\partial A} \cdot \textrm{d}{A}
+  + \frac{\partial f(A, B)}{\partial B} \cdot \textrm{d}{B}.
+$$
+To make the total differential notation clearer, plugging in a scalar
+$x$ with respect which to differentiate,
+$$
+\frac{\textrm{d}C}{\textrm{d}x}
+= \frac{\partial f(A, B)}{\partial A} \cdot \frac{\textrm{d}{A}}{\textrm{d}x}
+  + \frac{\partial f(A, B)}{\partial B} \cdot \frac{\textrm{d}{B}}{\textrm{d}x}.
+$$
+
+In the general case, if $C = f(A_1, \ldots, A_N),$ then
+$$
+\textrm{d}C
+= \sum_{n=1}^N \frac{\partial f(A_1, \ldots, A_N)}{\partial A_n} \textrm{d}{A_n}.
+$$
+
+
+## Forward mode
+
+As with scalars, the tangent of a matrix (or vector) $U$ is defined by
+
+$$
+\dot{U} = \frac{\partial U}{\partial x}.
+$$
+This expression is understood elementwise, with
+$$
+\dot{U}_{i, j} =\frac{\partial U_{i, j}}{\partial x}.
+$$
+
+Forward mode for matrices follows the chain rule, with
+$$
+\dot{C}
+= \frac{\partial C}{\partial A} \cdot \dot{A}
+  + \frac{\partial C}{\partial B} \cdot \dot{B}.
+$$
+As with forward-mode autodiff for scalars, this matrix derivative rule is
+straightforward to work out and to implement.
+
+In general, if $C =
+f(A_1, \ldots, A_N),$ then
+$$
+\dot{C} = \sum_{n=1}^N \frac{\partial C}{\partial A_n} \cdot
+\dot{A_n}.
+$$
+
+
+
+## Reverse mode
+
+Using the same adjoint notation as for scalars, if $U$ is an $M \times
+N$ matrix, then
+$$
+\overline{U} = \frac{\partial y}{\partial U},
+$$
+with elements
+$$
+\overline{U}_{i, j}
+= \frac{\partial y}{\partial U}[i, j]
+= \frac{\partial y}{\partial U_{i, j}}.
+$$
+The definition applies to vectors if $N = 1$ and row vectors if $M =
+1.$
+
+The adjoint method can be applied to matrix or vector functions in the
+same way as to scalar functions.  Suppose there is a final scalar
+result variable $y$ and along the way to computing $y$, the matrix (or
+vector) $B$ is used exactly once in the subexpression $B = f(\ldots,
+A, \ldots)$ involving a matrix (or vector) $A$.  By the chain
+rule,^[The terms in this equality can be read as vector derivatives by
+flattening the matrices.  If $A$ is an $M \times N$ matrix and $B$ is
+a $K \times L$ matrix, then $\displaystyle \frac{\partial y}{\partial
+A}$ is a vector of size $M \cdot N$, $\displaystyle \frac{\partial
+B}{\partial A}$ is matrix of size $(K \cdot L) \times (M \cdot N),$
+and $\displaystyle \frac{\partial y}{\partial B}$ is a vector if size
+$K \cdot L$.  After transposition, the right-hand side is a product of
+an $(M \cdot N) \times (K \cdot L)$ matrix and a vector of size $K
+\cdot L$, yielding a vector of size $M \cdot N,$ as found on the
+left-hand side.]
+$$
+\frac{\partial y}
+     {\partial A}
+= \left(
+    \frac{\partial B}
+         {\partial A}
+   \right)^{\top}
+   \cdot
+   \frac{\partial y}
+        {\partial B}.
+$$
+
+Rewriting the chain rule using adjoint and Jacobian notation,
+$$
+\overline{A}
+= \frac{\partial y}
+       {\partial A}
+= \left(\frac{\partial B}{\partial A}\right)^{\top} \cdot \overline{B}
+= \textrm{J}_f^{\top}(A) \cdot \overline{B},
+$$
+where the Jacobian function $\textrm{J}_f$ is generalized to matrices
+by^[This can again be understood by extending Jacobians to matrices or
+by flattening.]
+$$
+\textrm{J}_f(U) = \frac{\partial f(U)}{\partial U}.
+$$
+In words, the adjoint of an operand is the product of
+the Jacobian of the function and adjoint of the result.
+
+An expression $A$ may be used as an operand in multiple expressions
+involved in the computation of $y.$ As with scalars, the adjoints need
+to be propagated from each result, leading to the fundamental matrix
+autodiff rule for a subexpression $B = f(\ldots, A, \ldots)$ involved
+in the computation of $y,$
+$$
+\overline{A}
+\ \ {\small +}{=} \ \
+\textrm{J}_f^{\top}(A) \cdot \overline{B}.
+$$
+
+## Trace algebra
+
+The Jacobian of a function with an $N \times M$ matrix operand and $K
+\times L$ matrix result has $N \cdot M \cdot K \cdot L$ elements. This
+makes it prohibitively expensive in terms of both memory and
+computation to store and multiply Jacobians explicitly.  Instead,
+algebra is used to reduce adjoint computations to manageable sizes.
+
+Suppose that $C = f(A, B)$ is a matrix function.
+
+## Examples of matrix derivatives
+
+For example, if $C = A + B$, then
+$$
+\frac{\partial C}{\partial A} = 1
+\qquad
+\frac{\partial C}{\partial B} = 1,
+$$
+and hence the adjoint rules are
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C}
+$$
+and
+$$
+\overline{B} \ \ {\small +}{=} \ \ \overline{C}.
+$$
+
+In the more interesting case of multiplication, with $C = A \cdot B$,
+$$
+\frac{\partial C}{\partial A} = B,
+$$
+and
+$$
+\frac{\partial C}{\partial B} = A,
+$$
+leading to adjoint rules
+$$
+\overline{A}  \ \ {\small +}{=} \ \ \overline{C} \cdot B^{\top}
+$$
+and
+$$
+\overline{B}  \ \ {\small +}{=} \ \ A^{\top} \cdot \overline{C}.
+$$

@@ -6,6 +6,7 @@ rmd_files: [
   "introduction.Rmd",
   "forward.Rmd",
   "reverse.Rmd",
+  "matrix-derivatives.Rmd",
   "scalars.Rmd",
   "matrix-arithmetic.Rmd",
   "hmm.Rmd",
