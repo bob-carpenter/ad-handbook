@@ -234,7 +234,8 @@ $$
 Recall the transposed form of the adjoint rule,
 $$
 \overline{A}^{\top}
-= \overline{C}^{\top} \frac{\partial C}{\partial A},
+= \overline{C}^{\top}
+  \cdot \frac{\partial C}{\partial A},
 $$
 and similarly for $\overline{B}^{\top}$.  Plugging that into the final
 line of the previous derivation yields the final form of the

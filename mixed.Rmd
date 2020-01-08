@@ -1,0 +1,181 @@
+# Nested Mode
+
+Forward-mode automatic differentiation is defined with respect to an
+arbitrary scalar type.  So far, we have consider that to be a real
+number, so that forward mode computes derivatives.  By taking the
+scalar inside forward mode to itself be an automatic differentiation
+variable, higher-order derivatives may be calculated, even though only
+first-order derivatives need be defined.
+
+## Forward nested in forward
+
+Consider a dual number $\langle u, \dot{u} \rangle,$ where $u$ is a
+scalar variable and $\dot{u} = \frac{\partial u}{\partial x}$ for some
+distinguished independent variable $x$.  Suppose that instead of a
+simple scalar, $u = $\langle v, \acute{v} \rangle$ is itself a
+forward-mode autodiff variable defining derivatives with respect to
+$w$, so that $\acute{v} = \frac{\partial v}{\partial w}.$ A different
+diacritic is used above the nested variable to distinguish it from the
+outer diacritic dual number.  A nested forward-mode autodiff variable
+is of thus of the form $\big\langle \langle v, \acute{v} \rangle, \ \langle
+\dot{v}, \dot{\acute{v}} \rangle \big\rangle,$ where
+$$
+\acute{v} = \frac{\partial v}{\partial w},
+\qquad
+\dot{v} = \frac{\partial v}{\partial x}, \ \textrm{and}
+\qquad
+\dot{\acute{v}} = \frac{\partial^2 v}{\partial x \partial w}
+$$
+
+Recall the definition of exponentiation and multiplication for forward-mode autodiff
+variables,
+$$
+\exp(\langle u, \dot{u} \rangle)
+= \langle \exp(u), \exp(u) \cdot \dot{u} \rangle,
+$$
+and
+$$
+\langle u, \dot{u} \rangle
+\cdot \langle z, \dot{z} \rangle
+= \langle u \cdot z, \dot{u} \cdot z + u \cdot \dot{z} \rangle.
+$$
+Plugging $\langle v, \acute{v} \rangle$ in for $u,$
+$$
+\begin{array}{rcl}
+\exp\!\big(\big\langle \langle v, \acute{v} \rangle, \
+     \langle \dot{v}, \dot{\acute{v}} \rangle \big\rangle\big)
+& = &
+\big\langle \exp(\langle v, \acute{v} \rangle), \
+          \exp(\langle v, \acute{v} \rangle)
+	  \cdot \langle \dot{v}, \, \dot{\acute v} \rangle
+\big\rangle
+\\[4pt]
+& = &
+\big\langle \langle \exp(v), \, \exp(v) \cdot \acute{v} \rangle, \ \
+        \langle \exp(v), \, \exp(v) \cdot \acute{v} \rangle
+          \cdot \langle \dot{v}, \ \dot{\acute v} \rangle
+\big\rangle	
+\\[4pt]
+& = &
+\big\langle \langle \exp(v), \, \exp(v) \cdot \acute{v} \rangle, \ \
+        \langle \exp(v) \cdot \dot{v}, \,
+	        \exp(v) \cdot \acute{v} \cdot \dot{v}
+		+ \exp(v) \cdot \dot{\acute{v}} \rangle
+\big\rangle	
+\end{array}
+$$
+The value is correct,
+$$
+\exp(v) = \exp(v).
+$$
+The first nested derivative is also correct,
+$$
+\frac{\partial \exp(v)}{\partial w} = \exp(v) \cdot \frac{\partial
+v}{\partial w} = \exp(v) \cdot \acute{v},
+$$
+as is the other nested derivative,
+$$
+\frac{\partial \exp(v)}{\partial x} = \exp(v) \cdot \frac{\partial
+v}{\partial x} = \exp(v) \cdot \dot{v}.
+$$
+The second derivative also checks out,
+$$
+\begin{array}{rcl}
+\frac{\partial^2 \exp(v)}{\partial x \partial w}
+& = & \frac{\partial}{\partial x} \frac{\partial \exp(v)}{\partial w}
+\\[4pt]
+& = & \frac{\partial}{\partial x}
+        \left( \exp(v) \cdot \frac{\partial v}{\partial w} \right)
+\\[4pt]
+& = &
+\frac{\partial}{\partial x}(\exp(v))
+  \cdot \frac{\partial v}{\partial w}
++ \exp(v) \cdot \frac{\partial}{\partial x} \frac{\partial v}{\partial w}       
+\\[4pt]
+& = &
+\exp(v) \cdot \frac{\partial v}{\partial x} \cdot \frac{\partial v}{\partial w}
++ \exp(v) \cdot \frac{\partial}{\partial x} \frac{\partial v}{\partial w}       
+\\[4pt]
+& = &
+\exp(v) \cdot \dot{v} \cdot \acute{v}
++ \exp(v) \cdot \dot{\acute{v}}.
+\end{array}
+$$
+
+The simplicity of the nested method derives from never having to
+define anything other than first derivatives.  Computing second-order
+derivatives of the exponential only required the rules for first-order
+derivatives of exponentiation and first-order derivatives of products.
+
+## Computing Hessians with forward mode
+
+The Hessian matrix of all second derivatives for a function
+$f:\mathbb{R}^N \rightarrow \mathbb{R}$ may be computed by running
+forward-mode autodiff $\binom{N}{2} + N$ times, once for each unique
+pair ${m, n}$ and one for second derivatives with respect to a single
+variable.  Assuming evaluation of a function is $\mathcal{O}(g(N))$,
+forward-mode autodiff can be used to compute Hessians of
+$N$-dimensional functions in in $\mathcal{O}(N^2 \cdot g(N))$ time
+and $\mathcal{O}(N^2)$ space.  
+
+
+## Third-order derivatives and beyond
+
+The same logic applies for a third nesting of forward mode within
+forward mode within forward mode.  The result will have eight nested
+values (four for the value and four for the tangent).  From most to
+least nested, these values represent third-order derivatives
+$\frac{\partial^3}{\partial v \partial w \partial x},$ the three pairs
+of second-order derivatives, the three first-order derivatives, and
+the value.  Third derivatives are simple to compute this way, but
+provide quite the bookkeepoing obstacle to manual computation, as
+should be clear from the explicit evaluation of second-order
+derivatives for the exponential function using nested forward mode. 
+
+The nesting may be iterated to compute fourth-order derivatives, etc.
+
+## Reverse nested in forward
+
+A more efficient way to compute Hessians is to nest reverse-mode
+autodiff in forward-mode autodiff.  Thus rather than scalars in
+$\langle u, \cdot{u} \rangle,$ the $u$ are taken to be reverse-mode
+autodiff variables.  The forward pass records the subexpressions used
+in the evaluation of $f(\langle u, \cdot u \rangle)$ as before.  The
+reverse pass is then run from the final result $\cdot{u}$,
+which is of the appropriate reverse-mode autodiff type.  The
+result of running reverse mode backward from $\cdot{u}$ is the
+gradient $\nabla \cdot{u}.$  Now suppose $f : \mathbb{R}^N \rightarrow
+\mathbb{R}$ and $\cdot{u} = \frac{\partial u}{\partial x_n}$ for some
+$n \in 1{:}N.$  Then reverse-mode autodiff started from $y = f(x)$
+will compute 
+$$
+\nabla \frac{\partial f(x)}{\partial x_n} f(x)
+=
+\begin{bmatrix}
+\frac{\partial f(x) x_1} \frac{\partial f(x)}{\partial x_n}
+\cdots
+\frac{\partial x_N} \frac{\partial f(x)}{\partial x_n}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{\partial^2 f(x)}{\partial x_1 \partial x_n
+\cdots
+\frac{\partial^2 f(x)}{\partial x_N \partial x_n}.
+\end{bmatrix}
+$$
+
+## Computing Hessians with reverse nested in forward
+
+To compute a Hessian using reverse mode nested in forward-mode
+autodiff requires $N$ evaluations.  Assuming each function evaluation
+is $\mathcal{O}(g(n))$ leads to Hessian complexity of $\mathcal{O}(N
+\cdot g(N))$ time and $\mathcal{O}(N^2)$ space.  For example, if the
+time to compute $f(x)$ for $x \in \mathbb{R}^N$ is linear, i.e.,
+$\mathcal{O}(N),$ then the Hessian $\nabla \nabla^{\top} f(x)$ can be
+computed in $\mathcal{O}(N^2)$ time and space.
+
+## Higher-order nesting of reverse in forward mode
+
+Reverse-mode autodiff may be nested in forward mode and the result
+nested in forward mode again.  This allows computation of the complete
+set of third-order derivatives in $\mathcal{O}(N^3)$ time and space.  
