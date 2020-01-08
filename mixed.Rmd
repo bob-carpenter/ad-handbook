@@ -1,10 +1,10 @@
-# Nested Mode
+# Nested Forward Mode
 
 Forward-mode automatic differentiation is defined with respect to an
-arbitrary scalar type.  So far, we have consider that to be a real
-number, so that forward mode computes derivatives.  By taking the
-scalar inside forward mode to itself be an automatic differentiation
-variable, higher-order derivatives may be calculated, even though only
+arbitrary scalar type.  So far, that has been a siple real scalar, so
+that forward mode computes derivatives.  By taking the scalar inside
+forward mode to itself be an automatic differentiation variable,
+higher-order derivatives may be calculated, even though only
 first-order derivatives need be defined.
 
 ## Forward nested in forward
@@ -168,12 +168,13 @@ $$
 ## Computing Hessians with reverse nested in forward
 
 To compute a Hessian using reverse mode nested in forward-mode
-autodiff requires $N$ evaluations.  Assuming each function evaluation
-is $\mathcal{O}(g(n))$ leads to Hessian complexity of $\mathcal{O}(N
-\cdot g(N))$ time and $\mathcal{O}(N^2)$ space.  For example, if the
-time to compute $f(x)$ for $x \in \mathbb{R}^N$ is linear, i.e.,
-$\mathcal{O}(N),$ then the Hessian $\nabla \nabla^{\top} f(x)$ can be
-computed in $\mathcal{O}(N^2)$ time and space.
+autodiff requires $N$ evaluations, one for each row $\nabla
+\frac{\partial}{\partial x_n} f(x)$ of the Hessian.  Assuming each
+function evaluation is $\mathcal{O}(g(n))$ leads to Hessian complexity
+of $\mathcal{O}(N \cdot g(N))$ time and $\mathcal{O}(N^2)$ space.  For
+example, if the time to compute $f(x)$ for $x \in \mathbb{R}^N$ is
+linear, i.e., $\mathcal{O}(N),$ then the Hessian $\nabla \nabla^{\top}
+f(x)$ can be computed in $\mathcal{O}(N^2)$ time and space.
 
 ## Higher-order nesting of reverse in forward mode
 
