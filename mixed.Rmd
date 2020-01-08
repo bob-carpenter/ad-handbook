@@ -148,20 +148,21 @@ gradient $\nabla \cdot{u}.$  Now suppose $f : \mathbb{R}^N \rightarrow
 \mathbb{R}$ and $\cdot{u} = \frac{\partial u}{\partial x_n}$ for some
 $n \in 1{:}N.$  Then reverse-mode autodiff started from $y = f(x)$
 will compute 
+
 $$
-\nabla \frac{\partial f(x)}{\partial x_n} f(x)
+\nabla \frac{\partial f(x)}{\partial x_n}
 =
 \begin{bmatrix}
-\frac{\partial f(x) x_1} \frac{\partial f(x)}{\partial x_n}
-\cdots
-\frac{\partial x_N} \frac{\partial f(x)}{\partial x_n}
+\frac{\partial}{\partial x_1} \frac{\partial f(x)}{\partial x_n}
+\ \cdots \
+\frac{\partial}{\partial x_N} \frac{\partial f(x)}{\partial x_n}
 \end{bmatrix}
 =
 \begin{bmatrix}
-\frac{\partial^2 f(x)}{\partial x_1 \partial x_n
-\cdots
-\frac{\partial^2 f(x)}{\partial x_N \partial x_n}.
-\end{bmatrix}
+\frac{\partial^2 f(x)}{\partial x_1 \partial x_n}
+\ \cdots \
+\frac{\partial^2 f(x)}{\partial x_N \partial x_n}
+\end{bmatrix}.
 $$
 
 ## Computing Hessians with reverse nested in forward
