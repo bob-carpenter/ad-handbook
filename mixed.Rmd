@@ -54,14 +54,14 @@ $$
 \big\langle \langle \exp(v), \, \exp(v) \cdot \acute{v} \rangle, \ \
         \langle \exp(v), \, \exp(v) \cdot \acute{v} \rangle
           \cdot \langle \dot{v}, \ \dot{\acute v} \rangle
-\big\rangle	
+\big\rangle
 \\[4pt]
 & = &
 \big\langle \langle \exp(v), \, \exp(v) \cdot \acute{v} \rangle, \ \
         \langle \exp(v) \cdot \dot{v}, \,
 	        \exp(v) \cdot \acute{v} \cdot \dot{v}
 		+ \exp(v) \cdot \dot{\acute{v}} \rangle
-\big\rangle	
+\big\rangle
 \end{array}
 $$
 The value is correct,
@@ -90,11 +90,11 @@ $$
 & = &
 \frac{\partial}{\partial x}(\exp(v))
   \cdot \frac{\partial v}{\partial w}
-+ \exp(v) \cdot \frac{\partial}{\partial x} \frac{\partial v}{\partial w}       
++ \exp(v) \cdot \frac{\partial}{\partial x} \frac{\partial v}{\partial w}
 \\[4pt]
 & = &
 \exp(v) \cdot \frac{\partial v}{\partial x} \cdot \frac{\partial v}{\partial w}
-+ \exp(v) \cdot \frac{\partial}{\partial x} \frac{\partial v}{\partial w}       
++ \exp(v) \cdot \frac{\partial}{\partial x} \frac{\partial v}{\partial w}
 \\[4pt]
 & = &
 \exp(v) \cdot \dot{v} \cdot \acute{v}
@@ -116,7 +116,7 @@ pair ${m, n}$ and one for second derivatives with respect to a single
 variable.  Assuming evaluation of a function is $\mathcal{O}(g(N))$,
 forward-mode autodiff can be used to compute Hessians of
 $N$-dimensional functions in in $\mathcal{O}(N^2 \cdot g(N))$ time
-and $\mathcal{O}(N^2)$ space.  
+and $\mathcal{O}(N^2)$ space.
 
 
 ## Third-order derivatives and beyond
@@ -130,7 +130,7 @@ of second-order derivatives, the three first-order derivatives, and
 the value.  Third derivatives are simple to compute this way, but
 provide quite the bookkeepoing obstacle to manual computation, as
 should be clear from the explicit evaluation of second-order
-derivatives for the exponential function using nested forward mode. 
+derivatives for the exponential function using nested forward mode.
 
 The nesting may be iterated to compute fourth-order derivatives, etc.
 
@@ -141,16 +141,17 @@ autodiff in forward-mode autodiff.  Thus rather than scalars in
 $\langle u, \cdot{u} \rangle,$ the $u$ are taken to be reverse-mode
 autodiff variables.  The forward pass records the subexpressions used
 in the evaluation of $f(\langle u, \cdot u \rangle)$ as before.  The
-reverse pass is then run from the final result $\cdot{u}$,
-which is of the appropriate reverse-mode autodiff type.  The
-result of running reverse mode backward from $\cdot{u}$ is the
-gradient $\nabla \cdot{u}.$  Now suppose $f : \mathbb{R}^N \rightarrow
-\mathbb{R}$ and $\cdot{u} = \frac{\partial u}{\partial x_n}$ for some
-$n \in 1{:}N.$  Then reverse-mode autodiff started from $y = f(x)$
-will compute 
+reverse pass is then run from the final result $\cdot{u}$, to compute
+adjointws $\overline{\cdot{u}}.$  This is possible because all the
+calculations used to produce $\cdot{u}$ are scalar operations.
 
+Suppose $f : \mathbb{R}^N \rightarrow \mathbb{R}$.  Let $\dot{u} =
+\frac{\partial u}{\partial x_n}$ for some $n \in 1{:}N.$
+If $y = f(x),$ then $\dot{y} = \frac{\partial y}{\partial x_n},$ and
+reverse-mode autodiff started from $\dot{y}$ will compute
 $$
-\nabla \frac{\partial f(x)}{\partial x_n}
+\overline{\dot{y}}
+= \nabla \frac{\partial f(x)}{\partial x_n}
 =
 \begin{bmatrix}
 \frac{\partial}{\partial x_1} \frac{\partial f(x)}{\partial x_n}
@@ -180,4 +181,4 @@ f(x)$ can be computed in $\mathcal{O}(N^2)$ time and space.
 
 Reverse-mode autodiff may be nested in forward mode and the result
 nested in forward mode again.  This allows computation of the complete
-set of third-order derivatives in $\mathcal{O}(N^3)$ time and space.  
+set of third-order derivatives in $\mathcal{O}(N^3)$ time and space.

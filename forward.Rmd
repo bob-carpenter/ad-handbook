@@ -88,7 +88,6 @@ These all translate directly into rules of tangent propagation.
 
 ## Vectors and matrices
 
-
 The definitions of values and tangents remain the same when moving to
 vector or matrix functions.  If $A$ is an $M \times N$ matrix, then
 $\dot{A}$ is the $M \times N$ matrix composed of the tangents of the
@@ -148,3 +147,67 @@ $$
 $$
 after dropping the factor $A \cdot A^{-1} = \textrm{I}$ and replacing
 $A^{-1}$ with its value $C$.
+
+
+## Gradient-vector products
+
+The product of the gradient of a function at a given point and an
+arbitrary vector can be computed efficiently using forward-mode
+automatic differentiation.  Suppose $f : \mathbb{R}^N \rightarrow
+\mathbb{R}$ is a smooth function, $\nabla f(x)$ is its gradient at $x
+\in \mathbb{R}^N$.  For a vector $v \in \mathbb{R}^N,$
+the gradient-vector product is
+$$
+\nabla f(x) \cdot v
+= \sum_{n = 1}^N
+\nabla f_n(x) \cdot v_n
+= \sum_{n = 1}^N \frac{\partial f(x)}{\partial x_n} \cdot v_n.
+$$
+The types work out because gradients are taken to be row vectors,
+whereas $v$ is an ordinary column vector.
+
+To compute gradient-vector products with forward-mode automatic
+differentiation, the tangent of the input variable
+$x$ needs to be initilialized with the vector being multiplied,
+$$
+\dot{x} = v.
+$$
+Then dual arithmetic is used as usual to compute the result, and the
+final dual number's tangent is the gradient-vector product.
+
+For example, suppose $f(x) = x_1 \cdot x_2 + x_2,$
+$x = \begin{bmatrix} 12.9 & 127.1 \end{bmatrix}^{\top},$ and
+$v = \begin{bmatrix} 0.3 & -1.2 \end{bmatrix}^{\top}.$  The
+gradient-vector product is derived as
+$$
+\begin{array}{rcl}
+\langle 12.9, 0.3 \rangle \cdot \langle 127.1, -1.2 \rangle
++ \langle 127.1, -1.2 \rangle
+& = &
+\langle 12.9 \cdot 127.1, \, 0.3 \cdot 127.1 + 12.9 \cdot -1.2 \rangle
++ \langle 127.1, -1.2 \rangle
+\\[4pt]
+& = &
+\langle 12.9 \cdot 127.1 + 127.1, \
+        0.3 \cdot 127.1 + 12.9 \cdot -1.2 + -1.2
+\rangle
+\\[4pt]
+& = &
+\langle 1767, 21 \rangle.
+\end{array}
+$$
+Checking the gradient-vector product analytically,
+$$
+\nabla f(x)
+=
+\begin{bmatrix} x_2 & x_1 + 1 \end{bmatrix}
+=
+\begin{bmatrix} 127.1 & 12.9 + 1 \end{bmatrix},
+$$
+so that
+$$
+\nabla f(x) \cdot v
+= \begin{bmatrix} 127.1 & 12.9 + 1 \end{bmatrix}
+  \cdot  \begin{bmatrix} 0.3 & -1.2 \end{bmatrix}^{\top}
+  = 21.
+$$
