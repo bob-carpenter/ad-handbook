@@ -89,7 +89,7 @@ constant.
 
 ## Gradients
 
-Consider a smooth, vector function $f:\mathbb{R}^N \rightarrow
+Consider a smooth vector function $f:\mathbb{R}^N \rightarrow
 \mathbb{R}.$ Its gradient function, $\nabla f:\mathbb{R}^N \rightarrow
 \mathbb{R}^N,$ maps a vector $x \in \mathbb{R}^N$ to the vector of
 partial derivatives of $f(x)$,
@@ -116,6 +116,37 @@ $$
 \frac{\partial}{\partial x_N} f(x)
 \end{bmatrix}.
 $$
+
+## Gradient-vector products
+
+Given a smooth function $f : \mathbb{R}^N \rightarrow \mathbb{R}$, the
+derivative of $f$ along a vector $v$ at a point $x \in \mathbb{R}^N$
+is defined by
+$$
+\nabla_v f(x)
+=
+\lim_{\epsilon \rightarrow 0}
+\frac{f(x + \epsilon \cdot v) - f(x)}{\epsilon}.
+$$
+This definition is equivalent to defining the derivative along a
+vector as a standard gradient times the vector,
+$$
+\nabla_v f(x)
+= \nabla f(x) \cdot v
+= \sum_{n = 1}^N f_n(x) \cdot v_n
+= \sum_{n = 1}^N \frac{\partial f(x)}{\partial x_n} \cdot v_n.
+$$
+The vector multiplication is conformal because $\nabla f(x)$ is a row
+vector by definition, whereas $v$ is a standard column vector.
+
+## Directional derivatives
+
+A unit vector $u \in \mathbb{R}^N$, i.e., one where where $\sum_{n =
+1}^N u_n^2 = 1$, picks out a point on a sphere and hence a direction.
+The derivative of $f$ along a unit vector $u$ at the point $x$ is called
+a directional derivative, as it provides the change in $f$ in the
+direction picked out by $u.$
+
 
 ## Jacobians
 

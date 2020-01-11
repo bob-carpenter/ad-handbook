@@ -154,21 +154,13 @@ $A^{-1}$ with its value $C$.
 The product of the gradient of a function at a given point and an
 arbitrary vector can be computed efficiently using forward-mode
 automatic differentiation.  Suppose $f : \mathbb{R}^N \rightarrow
-\mathbb{R}$ is a smooth function, $\nabla f(x)$ is its gradient at $x
-\in \mathbb{R}^N$.  For a vector $v \in \mathbb{R}^N,$
-the gradient-vector product is
-$$
-\nabla f(x) \cdot v
-= \sum_{n = 1}^N
-\nabla f_n(x) \cdot v_n
-= \sum_{n = 1}^N \frac{\partial f(x)}{\partial x_n} \cdot v_n.
-$$
-The types work out because gradients are taken to be row vectors,
-whereas $v$ is an ordinary column vector.
-
-To compute gradient-vector products with forward-mode automatic
-differentiation, the tangent of the input variable
-$x$ needs to be initilialized with the vector being multiplied,
+\mathbb{R}$ is a smooth function and $x \in \mathbb{R}^N$ is a point
+in its domain.  To compute the derivative of $f$ along an arbitrary
+vector $v \in \mathbb{R}^N$, it suffices to compute the
+gradient-vector product $\nabla_v f(x) = \nabla f(x) \cdot v$.  This
+can be done with forward-mode automatic differentiation by
+initializing the tangents of the input variable $x$ with the vector
+being multiplied,
 $$
 \dot{x} = v.
 $$
@@ -210,4 +202,39 @@ $$
 = \begin{bmatrix} 127.1 & 12.9 + 1 \end{bmatrix}
   \cdot  \begin{bmatrix} 0.3 & -1.2 \end{bmatrix}^{\top}
   = 21.
+$$
+
+
+
+## Directional derivatives
+
+A directional derivative measures the change in a multivariate
+function in a given direction.  A direction can be specified as a
+point on a sphere, which corresponds to a unit vector $v$, i.e., a
+vector of unit length, where $\sum_{n=1}^N v_n^2 = 1.$ Given a smooth
+function $f : \mathbb{R}^N \rightarrow \mathbb{R},$ its derivative in
+the direction of unit vector $v \in \mathbb{R}^N$ at a point $x \in
+\mathbb{R}^N$ is $\nabla f(x) \cdot v.$ That is, a directional
+derivative is a gradient-vector product where the vector is a unit
+vector.
+
+Partial derivatives can be defined as vector-gradient products,
+$$
+\frac{\partial f(x)}{\partial
+x_n}
+=
+\nabla f(x) \cdot u_n,
+$$
+by taking $u_n$ to be the unit vector pointing along the $n$-th axis,
+$$
+u_n =
+\Big[
+\begin{array}[t]
+\
+\underbrace{0  \cdots 0 }_{n - 1 \ \textrm{zeros}}
+\ \ 1 \ \
+\underbrace{0  \cdots 0}_{N - n \ \textrm{zeros}}
+\
+\end{array}
+\Big].
 $$
