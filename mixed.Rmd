@@ -12,23 +12,66 @@ first-order derivatives need be defined.
 Consider a dual number $\langle u, \dot{u} \rangle,$ where $u$ is a
 scalar variable and $\dot{u} = \frac{\partial u}{\partial x}$ for some
 distinguished independent variable $x$.  Suppose that instead of a
-simple scalar, $u = $\langle v, \acute{v} \rangle$ is itself a
+simple scalar, $u = \langle v, \acute{v} \rangle$ is itself a
 forward-mode autodiff variable defining derivatives with respect to
 $w$, so that $\acute{v} = \frac{\partial v}{\partial w}.$ A different
 diacritic is used above the nested variable to distinguish it from the
 outer diacritic dual number.  A nested forward-mode autodiff variable
-is of thus of the form $\big\langle \langle v, \acute{v} \rangle, \ \langle
+thus of the form $\big\langle \langle v, \acute{v} \rangle, \ \langle
 \dot{v}, \dot{\acute{v}} \rangle \big\rangle,$ where
 $$
 \acute{v} = \frac{\partial v}{\partial w},
 \qquad
 \dot{v} = \frac{\partial v}{\partial x}, \ \textrm{and}
 \qquad
-\dot{\acute{v}} = \frac{\partial^2 v}{\partial x \partial w}
+\dot{\acute{v}} = \frac{\partial^2 v}{\partial x \partial w}.
 $$
 
-Recall the definition of exponentiation and multiplication for forward-mode autodiff
-variables,
+The tangent values of nested forward-mode autodiff variables are
+initialized following the derivatives.  For the input variable $w,$
+the initial nested autodiff variable is
+$$
+\begin{array}{rcl}
+\langle \langle w, \acute{w} \rangle, \,
+        \langle \dot{w}, \dot{\acute{w}} \rangle \rangle
+& = &
+\langle \langle w, \, \frac{\partial w}{\partial w} \rangle, \
+        \langle \frac{\partial w}{\partial x}, \, \frac{\partial^2
+	w}{\partial x \partial w} \rangle \rangle
+\\[4pt]
+& = & \langle \langle w, 1 \rangle, \, \langle 0, 0 \rangle \rangle.
+\end{array}
+$$
+Input variable $x$ corresponds to an autodiff variable
+$$
+\begin{array}{rcl}
+\langle \langle x, \acute{x} \rangle, \,
+        \langle \dot{x}, \dot{\acute{x}} \rangle \rangle
+& = &
+\langle \langle x, \, \frac{\partial x}{\partial w} \rangle, \
+        \langle \frac{\partial x}{\partial x}, \, \frac{\partial^2
+	x}{\partial x \partial w} \rangle \rangle
+\\[4pt]
+& = & \langle \langle x, 0 \rangle, \, \langle 1, 0 \rangle \rangle.
+\end{array}
+$$
+Any other input variable $u$ such that $u \neq x$ and $u \neq y$ will
+be initialized with nested autodiff variable
+$$
+\begin{array}{rcl}
+\langle \langle u, \acute{u} \rangle, \,
+        \langle \dot{u}, \dot{\acute{u}} \rangle \rangle
+& = &
+\langle \langle u, \, \frac{\partial u}{\partial w} \rangle, \
+        \langle \frac{\partial u}{\partial x}, \, \frac{\partial^2
+	u}{\partial x \partial w} \rangle \rangle
+\\[4pt]
+& = & \langle \langle x, 0 \rangle, \, \langle 0, 0 \rangle \rangle.
+\end{array}
+$$
+
+Recall the definition of exponentiation and multiplication for
+forward-mode autodiff variables,
 $$
 \exp(\langle u, \dot{u} \rangle)
 = \langle \exp(u), \exp(u) \cdot \dot{u} \rangle,
@@ -102,21 +145,76 @@ $$
 \end{array}
 $$
 
+Working through a complete example, suppose
+$$
+f(a, b, c) = a \cdot \exp(b \cdot c).
+$$
+To evaluate $\frac{\partial^2}{\partial a \partial b}
+f(2.1, 1.5, -0.3),$ the dual numbers will be of the form
+$$
+\langle
+  \langle u, \acute{u} \rangle, \,
+  \langle \dot{u}, \dot{\acute{u}} \rangle
+\rangle
+=
+\langle
+  \langle u, \frac{\partial u}{\partial a} \rangle, \,
+  \langle \frac{\partial u}{\partial b}, \frac{\partial^2 u}{\partial
+  a \partial b} \rangle
+\rangle.
+$$
+Thus the variables are initialized with appropriate derivatives,
+$$
+\begin{array}{rcl}
+a & \Rightarrow & \langle \langle 2.1, 1 \rangle, \, \langle 0, 0 \rangle \rangle
+\\
+b & \Rightarrow & \langle \langle 1.5, 0 \rangle, \, \langle 1, 0 \rangle \rangle
+\\
+c & \Rightarrow & \langle \langle -0.3, 0 \rangle, \, \langle 0, 0 \rangle \rangle.
+\end{array}
+$$
+Then evaluation is carried out from most nested outward, with
+$$
+\begin{array}{rcl}
+b \cdot c
+& \Rightarrow &
+\langle \langle -0.45, 0 \rangle, \, \langle -0.3, 0 \rangle \rangle
+\\[4pt]
+\exp(b \cdot c)
+& \Rightarrow &
+\langle \langle 0.64, 0 \rangle, \, \langle -0.19, 0 \rangle \rangle
+\\[4pt]
+a \cdot \exp(b \cdot c)
+& \Rightarrow &
+\langle \langle 1.3, 0.64 \rangle, \, \langle -0.40, -0.19 \rangle \rangle
+\end{array}
+$$
+Reading the results out of the nested dual number, the value is 1.3,
+the derivative with respect to $a$ is 0.64, and the derivative with
+respect to $b$ is -0.4, and the second derivative with respect to $a$
+and $b$ is -0.19.  The analytic second derivative is
+$$
+\frac{\partial}{\partial a \, \partial b} a \cdot \exp(b \cdot c)
+=
+c \cdot \exp(b \cdot c).
+$$
+Plugging in $a = 2.1, b = 1.5, c = -0.3$ yields $-0.19$, matching the
+results obtained through automatic differentiation.
+
 The simplicity of the nested method derives from never having to
 define anything other than first derivatives.  Computing second-order
 derivatives of the exponential only required the rules for first-order
 derivatives of exponentiation and first-order derivatives of products.
 
-## Computing Hessians with forward mode
+## Hessians with forward mode
 
 The Hessian matrix of all second derivatives for a function
 $f:\mathbb{R}^N \rightarrow \mathbb{R}$ may be computed by running
 forward-mode autodiff $\binom{N}{2} + N$ times, once for each unique
 pair ${m, n}$ and one for second derivatives with respect to a single
-variable.  Assuming evaluation of a function is $\mathcal{O}(g(N))$,
-forward-mode autodiff can be used to compute Hessians of
-$N$-dimensional functions in in $\mathcal{O}(N^2 \cdot g(N))$ time
-and $\mathcal{O}(N^2)$ space.
+variable.  Assuming evaluation of $f(x)$ for $x \in \mathbb{R}^N$ is
+$\mathcal{O}(g(N))$, forward-mode autodiff can be used to compute
+Hessians in $\mathcal{O}(N^2 \cdot g(N))$ time and $\mathcal{O}(N^2)$ space.
 
 
 ## Third-order derivatives and beyond
@@ -168,17 +266,38 @@ $$
 
 ## Computing Hessians with reverse nested in forward
 
-To compute a Hessian using reverse mode nested in forward-mode
-autodiff requires $N$ evaluations, one for each row $\nabla
-\frac{\partial}{\partial x_n} f(x)$ of the Hessian.  Assuming each
-function evaluation is $\mathcal{O}(g(n))$ leads to Hessian complexity
-of $\mathcal{O}(N \cdot g(N))$ time and $\mathcal{O}(N^2)$ space.  For
-example, if the time to compute $f(x)$ for $x \in \mathbb{R}^N$ is
-linear, i.e., $\mathcal{O}(N),$ then the Hessian $\nabla \nabla^{\top}
-f(x)$ can be computed in $\mathcal{O}(N^2)$ time and space.
+Applying the adjoint method to a forward-mode derivative results in a
+row of the Hessian matrix.  Thus to compute a Hessian using reverse
+mode nested in forward-mode autodiff requires $N$ function
+evaluations, one for each row $\nabla \frac{\partial}{\partial x_n}
+f(x)$ of the Hessian.  Assuming each function evaluation is
+$\mathcal{O}(g(n))$ leads to Hessian complexity of $\mathcal{O}(N
+\cdot g(N))$ time and $\mathcal{O}(N^2)$ space.  For example, if the
+time to compute $f(x)$ for $x \in \mathbb{R}^N$ is linear, i.e.,
+$\mathcal{O}(N),$ then the Hessian $\nabla \nabla^{\top} f(x)$ can be
+computed in $\mathcal{O}(N^2)$ time and space.
 
 ## Higher-order nesting of reverse in forward mode
 
-Reverse-mode autodiff may be nested in forward mode and the result
-nested in forward mode again.  This allows computation of the complete
-set of third-order derivatives in $\mathcal{O}(N^3)$ time and space.
+Applying the adjoint method to forward mode nested in forward mode
+leads to third derivatives.  Suppose $f:\mathbb{R}^N \rightarrow
+\mathbb{R}$ and $x \in \mathbb{R}^N$.  Nested forward mode computes
+$\acute{\dot{y}} = \frac{\partial^2}{\partial x_m \partial x_n} f(x).$
+Applying the adjoint method to this result produces third derivatives,
+$$
+\overline{\acute{\dot{u}}}
+=
+\nabla \frac{\partial^2}{\partial x_m \partial x_n} f(x)
+=
+\begin{bmatrix}
+\frac{\partial^3}{\partial x_1 \partial x_m \partial x_n} f(x)
+& \cdots &
+\frac{\partial^3}{\partial x_N \partial x_m \partial x_n} f(x)
+\end{bmatrix}.
+$$
+
+Computing all third-order derivatives of $f$ at $x$ requires
+$\mathcal{O}(N^2)$ evaluations of $f(x)$, each using reverse mode
+nested in forward mode further nested in forward mode.  Thus if
+evaluating $f$ is $\mathcal{O}(g(N))$ then evaluating all third order
+derivatives requires $\mathcal{O}(g(N) \cdot N^2)$ time.

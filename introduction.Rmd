@@ -197,12 +197,12 @@ $$
 ## Hessians
 
 Consider a smooth multivariate function $f : \mathbb{R}^N \rightarrow
-\mathbb{R}$ of a single output.  The Hessian function $H_f$ maps an
+\mathbb{R}$ of a single output.  The Hessian function $\textrm{H}_f$ maps an
 element $x \in \mathbb{R}^N$ to its matrix of second derivatives, and
 is defined by applying the gradient operator twice (with a
 transposition in between),
 $$
-H_f(x)
+\textrm{H}_f(x)
 =
 \nabla \nabla^{\top} f(x)
 =
@@ -237,14 +237,64 @@ H_f(x)
 $$
 Elementwise, the entries in the Hessian evaluated at $x$ are
 $$
-H_f(x)[m, n]
+\textrm{H}_f(x)[m, n]
 = \frac{\partial^2}{\partial x_m \partial x_n} f(x)
 = \frac{\partial}{\partial x_m} \frac{\partial}{\partial x_n} f(x).
 $$
-The Hessian matrix is symmetric, with $H_f(x)[m, n] = H_f(x)[n, m]$.
+The Hessian matrix is symmetric, with $\textrm{H}_f(x)[m, n] = \textrm{H}_f(x)[n, m]$.
 The diagonals are the second partial derivatives,
 $$
-H_f(x)[n, n]
+\textrm{H}_f(x)[n, n]
 = \frac{\partial}{\partial x_n} \frac{\partial}{\partial x_n} f(x)
 = \frac{\partial^2}{\partial x_n^2} f(x).
+$$
+
+## Hessian-vector products
+
+Suppose $f : \mathbb{R}^N \rightarrow \mathbb{R}$ is a smooth
+function.  The product of the Hessian of $f$ at a point
+$x \in \mathbb{R}^N$ and an arbitrary vector $v \in \mathbb{R}$
+can be calculated as the gradient of a vector-gradient product,
+$$
+\textrm{H}_f(x) \cdot v
+= \left( \nabla \nabla^{\top} f(x) \right) \cdot v
+= \nabla \left( \nabla f(x) \cdot v \right)^{\top}.
+$$
+This can be verified elementwise,
+$$
+\begin{array}{rcl}
+\left(\textrm{H}_f(x) \cdot v\right)[m]
+& = &
+\textrm{H}_f(x)[m] \cdot v
+\\[4pt]
+& = &
+\sum_{n = 1}^N \textrm{H}_f(x)[m, n] \cdot v[n]
+\\[4pt]
+& = &
+\sum_{n = 1}^N \left( \nabla \nabla^{\top} f(x) \right)[m, n]
+\cdot v_n
+\\[4pt]
+& = &
+\sum_{n = 1}^N \frac{\partial^{2}}{\partial x_m \partial x_n} f(x)
+\cdot v_n
+\\[4pt]
+& = &
+\sum_{n = 1}^N \frac{\partial}{\partial x_m} \frac{\partial}{\partial
+x_n} \left( f(x) \cdot v_n \right)
+\\[4pt]
+& = &
+\frac{\partial}{\partial x_m} \sum_{n = 1}^N \frac{\partial}{\partial
+x_n} \left( f(x) \cdot v_n \right)
+\\[4pt]
+& = &
+= \nabla \left( \nabla f(x) \cdot v \right)^{\top}[m].
+\end{array}
+$$
+
+
+Because Hessians are symmetric, $v$ can be multiplied on the left or
+right
+$$
+v^{\top} \cdot \textrm{H}_f(x)
+= \left( \textrm{H}_f(x) \cdot v \right)^{\top}.
 $$
