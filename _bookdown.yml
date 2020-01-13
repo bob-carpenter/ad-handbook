@@ -1,4 +1,4 @@
-delete_merged_file: FALSE
+delete_merged_file: true
 new_session: FALSE
 before_chapter_script: "before-chapter.R"
 rmd_files: [
@@ -11,5 +11,6 @@ rmd_files: [
   "scalars.Rmd",
   "matrix-arithmetic.Rmd",
   "hmm.Rmd",
-  "cpp-implementation.Rmd"
+  "cpp-implementation.Rmd",
+  "bibliography.Rmd"
 ]

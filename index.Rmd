@@ -3,10 +3,13 @@ knit: 'bookdown::render_book("index.Rmd", "tufte_html_book")'
 title: 'Automatic Differentiation Handbook'
 author: 'Bob Carpenter, editor'
 date: '2019'
+bibliography: all.bib
+biblio-style: "acm"
+link-citations: true
 output:
   bookdown::tufte_html_book:
     split_by: chapter
-    toc_depth: 1
+    toc_depth: 2
   bookdown::tufte_book:
     latex_engine: "pdflatex"
     includes:
@@ -18,6 +21,87 @@ output:
 
 # Preface {-}
 
-This book provides an overview of automatic differentiation along with
-rules for forward- and backward-mode differentiation of widely used
-scalar, vector, matrix, and probability functions.
+The goal of this book is to introduce the basic algorithms for
+automatic differentiation along with an encyclopedic collection of
+automatic differentiation rules for popular mathematical and
+statistical functions.
+
+## Overview of this book {-}
+
+Automatic differentiation is a general technique for lifting a
+function computing values to one that also computes derivatives.
+Derivative computations add only a constant overhead to each operation
+used to compute the function value, so that the differentiable
+function has the same order of complexity as the original function.
+
+In addition to describing various forms of automatic differnetiation,
+this book supplies an encyclopedic collection of tangent and adjoint
+rules for forward-mode and backward-mode automatic differentiation
+covering most widely used scalar, vector, matrix, and probability
+functions.
+
+The appendix contains working example code for forward-mode,
+reverse-mode and mixed-mode automatic differentiation.
+
+
+## Why derivatives? {-}
+
+Applications of derivatives, which measure the change in one quantity
+relative to a change in anoher quantity, are ubiquitous in applied
+mathematics.  Although derivatives can be computed mechanistically by
+hand in many cases, the process is painstaking and error prone.
+
+The present text is motivated by statistical inference
+algorithms that use first and second-order derivatives, e.g.,
+
+* quasi-Newton optimization for penalized maximum likelihood
+estimation (first-order derivatives with approximate second-order
+derivatives),
+* Laplace approximation for standard errors and approximate Bayesian
+posteriors (second-order derivatives),
+* Hamiltonian Monte Carlo sampling for Bayesian posterior inference
+(first-order derivatives with Euclidean geometry and up to third-order
+derivatives with Riemannian geometry), and
+* stochastic gradient descent for nested expectations in variational
+inference (Monte Carlo samples of first-order derivatives).
+
+## Why automatic differentiation? {-}
+
+Deriving derivatives analytically by hand is not only painstaking and
+error prone under the best of circumstances, it is difficult to do
+efficiently for iterative functions involved in matrix factorization
+or differential equation solving.  As its name implies, automatic
+differentiation automatically lifts a function computing a value to
+one computing the value and its derivatives.  Perhaps more
+surprisingly, this can be done in full generality with both efficiency
+and high arithmetic precision.
+
+## Overview of automatic differentiation techniques {-}
+
+Forward-mode automatic differentiation employs the tangent method of
+propagating the chain rule forward from independent (input) variables.
+Forward mode computes derivatives of all outputs of a function $f:
+\mathbb{R} \rightarrow \mathbb{R}^M$ with respect to its input.
+Forward mode can also be used to efficiently compute directional
+derivatives, or more generally, gradient-vector products.
+
+Reverse-mode automatic differentiation employs the adjoint method of
+propagating the chain rule backward from a dependent (output)
+variable.  Reverse-mode computes the gradient of a function, that is
+the derivatives of the output a function $f : \mathbb{R}^N \rightarrow
+\mathbb{R}$ with respect to each input.
+
+Either forward-mode or reverse-mode automatic differentiation may be
+used to compute Jacobians, that is the $M \times N$ matrix of all
+first-order derivatives of a function $f:\mathbb{R}^N \rightarrow
+\mathbb{R}^M.$ Jacobians require $N$ passes of forward-mode or $M$
+passes of reverse-mode automatic differentiation.
+
+Nesting reverse-mode automatic differentation within forward mode
+provides efficient calculation of Hessians, that is the matrix of all
+second-order derivatives of a function $f:\mathbb{R}^N \rightarrow
+\mathbb{R}.$ Hessians require $N$ passes of reverse mode nested in
+forward mode.  Just as forward-mode automatic differentiation may be
+used to efficiently calculate gradient-vector products, reverse mode
+nested in forward mode can be used in the same way to efficiently
+compute Hessian-vector products.

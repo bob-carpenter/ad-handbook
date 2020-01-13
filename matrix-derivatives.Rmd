@@ -282,3 +282,8 @@ and
 $$
 \overline{B}  \ \ {\small +}{=} \ \ A^{\top} \cdot \overline{C}.
 $$
+
+## References {-}
+
+The section on trace algebra exapnds the derivation presented in
+[@giles:2008,@giles:2008b].

@@ -196,3 +196,8 @@ $$
 \cdot \textrm{diag}(\Lambda_{n})
 \cdot \beta_{n}.
 $$
+
+## References {-}
+
+The matrix form of the likelihood and forward-backward algorithm, as
+well as the matrix derivatives are based on the presentaiton in [@qin:2000].

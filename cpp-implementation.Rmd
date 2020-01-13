@@ -1,4 +1,6 @@
-# Appendix: Reference C++ Implementations
+# (APPENDIX) Appendices {-}
+
+# Reference C++ Implementations
 
 ## Forward-mode automatic differentiation in C++
 
@@ -366,3 +368,10 @@ reverse sweep is carried out starting from the result `y` using the
 `chain()` function.  The resulting adjoints for `x1` and `x2` are
 found by indexing the vector of adjoints returned by `chain().`  These
 are then printed and the default success code (zero) is returned.
+
+## References
+
+The reverse-mode autodiff implementation is based on
+[@carpenter:2018].  Matrices are implemented with the Eigen C++
+library [@gunnebaud:2020].  [@vandevoorde:2017] is a good introduction
+to modern C++ template programming.

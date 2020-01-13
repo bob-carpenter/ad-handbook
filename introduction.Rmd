@@ -1,21 +1,5 @@
 # Derivatives
 
-Applications of derivatives, which measure the change in one quantity
-relative to a change in anoher quantity, are ubiquitous in applied
-mathematics.  This present text is motivated by statistical inference
-algorithms that use first and second-order derivatives, e.g.,
-
-* quasi-Newton optimization for penalized maximum likelihood
-estimation (first-order derivatives with approximate second-order
-derivatives),
-* Laplace approximation for standard errors and approximate Bayesian
-posteriors (second-order derivatives),
-* Hamiltonian Monte Carlo sampling for Bayesian posterior inference
-(first-order derivatives with Euclidean geometry and up to third-order
-derivatives with Riemannian geometry), and
-* stochastic gradient descent for nested expectations in variational
-inference (Monte Carlo samples of first-order derivatives).
-
 ## Smooth functions
 
 A smooth function is one that is continuously differentiable over its
@@ -156,12 +140,12 @@ Consider a smooth multivariate function $f:\mathbb{R}^N \rightarrow
 \mathbb{R}^N$ to the $M \times N$ matrix of partial derivatives of
 each element of $f(x)$ with respect to each $x_n$,
 $$
-J_f(x) = \frac{\partial}{\partial x}f(x).
+\textrm{J}_f(x) = \frac{\partial}{\partial x}f(x).
 $$
 Row $m$ of the Jacobian matrix is a gradient for a single output,
 and the entries make up all of the partial derivatives of $f$,
 $$
-J_f(x) =
+\textrm{J}_f(x) =
 \begin{bmatrix}
 \nabla f_1(x)
 \\
@@ -191,7 +175,7 @@ f_m(x) = f(x)[m].
 $$
 Elementwise, the entries of the Jacobian are
 $$
-J_f(x)[m, n] = \frac{\partial}{\partial x_n}f_m(x).
+\textrm{J}_f(x)[m, n] = \frac{\partial}{\partial x_n}f_m(x).
 $$
 
 ## Hessians
@@ -263,7 +247,7 @@ $$
 This can be verified elementwise,
 $$
 \begin{array}{rcl}
-\left(\textrm{H}_f(x) \cdot v\right)[m]
+\left(\textrm{H}_f(x) \cdot v\right)\![m]
 & = &
 \textrm{H}_f(x)[m] \cdot v
 \\[4pt]
@@ -298,3 +282,8 @@ $$
 v^{\top} \cdot \textrm{H}_f(x)
 = \left( \textrm{H}_f(x) \cdot v \right)^{\top}.
 $$
+
+## References {-}
+
+An excellent reference for both matrix algebra and differential
+calculus is [@magnus:2019].
