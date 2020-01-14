@@ -7,7 +7,7 @@ with a single input and multiple outputs.
 
 Suppose $x \in \mathbb{R}$ and that $v = f(u)$.  We write a
 dot over an expression to indicate a derivative with respect to a
-variable $x$,
+distinuished variable $x$,
 $$
 \dot{u} = \frac{\partial}{\partial x} u.
 $$
@@ -45,7 +45,7 @@ $$
 
 ## Dual numbers
 
-Forward-mode automatic differentiation may be formalized using dual
+Forward-mode automatic differentiation can be formalized using dual
 numbers consisting of the value of an expression and its derivative,
 $\langle u, \dot{u} \rangle.$  Smooth functions may then be extended
 to operate on dual numbers.  For example, negation is defined for dual
@@ -86,67 +86,6 @@ $$
 $$
 These all translate directly into rules of tangent propagation.
 
-## Vectors and matrices
-
-The definitions of values and tangents remain the same when moving to
-vector or matrix functions.  If $A$ is an $M \times N$ matrix, then
-$\dot{A}$ is the $M \times N$ matrix composed of the tangents of the
-variables in $A$, i.e., $\dot{A}[i, j]$ is the tangent of matrix entry
-$A[i, j]$.
-
-The tangent rules for matrix operations carry over neatly from the
-scalar case.  For example, $C = A + B$ is the sum of two matrices, the
-corresponding tangent rule is
-$$
-\dot{C} = \dot{A} + \dot{B}.
-$$
-Here and throughout, matrices used in arithmetic operations will be
-assumed to conform to the required shape and size constraints in the
-expressions in which they are used.  For $A + B$ to be well formed,
-$A$ and $B$ must both be $M \times N$ matrices (i.e., they must have
-the same number of rows and columns).
-
-Similarly, if $C = A \cdot B$ is the product of two matrices, the
-tangent rule is the same as that for scalars,
-$$
-\dot{C} = \dot{A} \cdot B + A \cdot \dot{B}.
-$$
-
-Simple tangent rules exist for many linear algebra operations, such as
-inverse.  If $C = A^{-1}$, then the tangent rule is
-$$
-\dot{C} = -C \cdot \dot{A} \cdot C.
-$$
-Results such as these are derived through algebraic manipulation and
-differentiation (see \cite{giles:2008b} for general rules).  For
-inverse, because
-$$
-C \cdot A = A^{-1} \cdot A = \textrm{I}.
-$$
-Differentiating both sides yields
-$$
-\frac{\partial}{\partial x} C \cdot A
-=
-\frac{\partial}{\partial x} \textrm{I}.
-$$
-Replacing with dot notation yields
-$$
-\dot{C} \cdot A + C \cdot \dot{A} = 0.
-$$
-Rearranging the terms produces
-$$
-\dot{C} \cdot A = - C \cdot \dot{A}.
-$$
-Multiplying both sides of the equation on the right by $A^{-1}$ gives
-$$
-\dot{C} \cdot A \cdot A^{-1} = -C \cdot \dot{A} \cdot A^{-1}.
-$$
-This reduces to the final simplified form
-$$
-\dot{C} = -C \cdot \dot{A} \cdot C,
-$$
-after dropping the factor $A \cdot A^{-1} = \textrm{I}$ and replacing
-$A^{-1}$ with its value $C$.
 
 
 ## Gradient-vector products
@@ -155,7 +94,7 @@ The product of the gradient of a function at a given point and an
 arbitrary vector can be computed efficiently using forward-mode
 automatic differentiation.  Suppose $f : \mathbb{R}^N \rightarrow
 \mathbb{R}$ is a smooth function and $x \in \mathbb{R}^N$ is a point
-in its domain.  To compute the derivative of $f$ along an arbitrary
+in its domain.  To compute the derivative of $f$ at $x$ along an arbitrary
 vector $v \in \mathbb{R}^N$, it suffices to compute the
 gradient-vector product $\nabla_v f(x) = \nabla f(x) \cdot v$.  This
 can be done with forward-mode automatic differentiation by
@@ -167,10 +106,19 @@ $$
 Then dual arithmetic is used as usual to compute the result, and the
 final dual number's tangent is the gradient-vector product.
 
-For example, suppose $f(x) = x_1 \cdot x_2 + x_2,$
-$x = \begin{bmatrix} 12.9 & 127.1 \end{bmatrix}^{\top},$ and
-$v = \begin{bmatrix} 0.3 & -1.2 \end{bmatrix}^{\top}.$  The
-gradient-vector product is derived as
+For example, suppose
+$$
+f(x) = x_1 \cdot x_2 + x_2,
+$$
+$$
+x = \begin{bmatrix} 12.9 & 127.1 \end{bmatrix}^{\top},
+$$
+and
+$$
+v = \begin{bmatrix} 0.3 & -1.2 \end{bmatrix}^{\top}.
+$$
+The gradient-vector product $\nabla_v f(x) = \nabla f(x) \cdot v$
+is derived as
 $$
 \begin{array}{rcl}
 \langle 12.9, 0.3 \rangle \cdot \langle 127.1, -1.2 \rangle
@@ -199,7 +147,7 @@ $$
 so that
 $$
 \nabla f(x) \cdot v
-= \begin{bmatrix} 127.1 & 12.9 + 1 \end{bmatrix}
+= \begin{bmatrix} 127.1 & 13.9 \end{bmatrix}
   \cdot  \begin{bmatrix} 0.3 & -1.2 \end{bmatrix}^{\top}
   = 21.
 $$
@@ -220,8 +168,7 @@ vector.
 
 Partial derivatives can be defined as vector-gradient products,
 $$
-\frac{\partial f(x)}{\partial
-x_n}
+\frac{\partial}{\partial x_n} f(x)
 =
 \nabla f(x) \cdot u_n,
 $$

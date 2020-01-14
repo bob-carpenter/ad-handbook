@@ -3,20 +3,21 @@
 The reverse-mode automatic differentiation algorithm, also known as
 the adjoint method, is a means for efficiently computing derivatives
 of smooth functions $f : \mathbb{R}^N \rightarrow \mathbb{R}$ from
-multiple inputs to a single output, i.e., computing gradients.
+multiple inputs to a single output (i.e., gradients).
 
 ## Adjoints
 
-Suppose $y \in \mathbb{R}$ is a final dependent variable and $v$ is a
-subexpression used in the calculation of $y$.  The adjoint of $v$ is
-the derivative of $y$ with respect to $v$, and is written with a bar,
+Suppose $y \in \mathbb{R}$ is the final dependent output variable and
+$v$ is a subexpression used in the calculation of $y$.  The adjoint of
+$v$ is the derivative of $y$ with respect to $v$, and is written with
+a bar,
 $$
-\bar{v} = \frac{\partial}{\partial v} y.
+\overline{v} = \frac{\partial}{\partial v} y.
 $$
 
 Suppose that $v = f(u)$.  The chain rule tells us that
 $$
-\bar{u}
+\overline{u}
 = \frac{\partial y}{\partial u}
 = \frac{\partial y}{\partial v}
 \cdot \frac{\partial v}{\partial u}
@@ -24,22 +25,22 @@ $$
 \cdot \frac{\partial f(u)}{\partial u}
 = \frac{\partial y}{\partial v}
 \cdot f'(u) \cdot \frac{\partial u}{\partial u}
-= \bar{v} \cdot f'(u).
+= \overline{v} \cdot f'(u).
 $$
 Because a sub-expression may be involved in more than one expression,
 the adjoint rules are expressed as increments,
 $$
-\bar{u} \ \ {\small +}{=} \ \ \bar{v} \cdot f'(u).
+\overline{u} \ \ {\small +}{=} \ \ \overline{v} \cdot f'(u).
 $$
 
 For example, if $v = \exp(u)$, with $\exp'(u) = \exp(u)$, the rule is
 $$
-\bar{u} \ \ {\small +}{=} \ \ \bar{v} \cdot \exp(u).
+\overline{u} \ \ {\small +}{=} \ \ \overline{v} \cdot \exp(u).
 $$
 For logarithms, with $v = \log u$, with $\log'(u) = \frac{1}{u},$ the
 adjoint rule is
 $$
-\bar{u} \ \ {\small +}{=} \ \ \bar{v} \cdot \frac{1}{u}.
+\overline{u} \ \ {\small +}{=} \ \ \overline{v} \cdot \frac{1}{u}.
 $$
 
 When there is more than one argument, adjoints propagate independently
@@ -48,40 +49,30 @@ with respect to the argument.  For example, if $w = u \cdot v$, then because
 $\frac{\partial}{\partial u} u \cdot v = v$ and
 $\frac{\partial}{\partial v} u \cdot v = u$, the adjoint rules are
 $$
-\bar{u} \ \ {\small +}{=} \ \ \bar{w} \cdot v
+\overline{u} \ \ {\small +}{=} \ \ \overline{w} \cdot v
 $$
 and
 $$
-\bar{v} \ \ {\small +}{=} \ \ \bar{w} \cdot u.
+\overline{v} \ \ {\small +}{=} \ \ \overline{w} \cdot u.
 $$
 
 ## Adjoint propagation and continuations
 
 Adjoint rules increment the adjoints of operands based on the adjoint
 of the result, and as such, must be executed after the adjoint of the
-result has been computed.  Thus the adjoint rules need to be executed
-in the reverse of the order in which they appear.
+result has been computed.  This leads to adjoints being propagated in
+the reverse order of function computation, hence the name of the
+method.^[Any topological sort of the expressions where results are
+greater than operands will suffice.]
 
-Computationally, as each operation executes, the adjoint increments
-for each operand are pushed onto a stack. After the final value is
+Computationally, as each operation executes, the code to handle
+adjoint propagation is pushed onto a stack.  After the final value is
 computed for which derivatives are required, the adjoints are executed
-by popping adjoint rules off the stack and executing them.  The
-adjoint code amounts to a continuation, that is a bit of executable
-code with references to existing variables.
-
-
-
-
-Computationally, adjoint propagation amounts to executing a
-continuation for each operand
-such behavior amounts to executing the adjoint rule as a continuation,
-with continuations for expressions forming a stack that is executed
-last-in-first-out.
-
-the result's
-adjoint is known.  This means the adjoint rules have to be applied in
-reverse, from the final dependent variable back to the input
-independent variables.
+by popping adjoint code off the stack and executing it.  The adjoint
+code amounts to a continuation, that is code that is stored with some
+of its context to be executed later.  As usual, continuations can be
+implemented via closures and the closures stored on a stack to be
+executed in last-in/first-out order.
 
 For example, consider a simple compound expression $y = \log (u \cdot
 v).$  To compute the value of $y$, First, $u \cdot v$ is executed,
@@ -102,14 +93,14 @@ $$
 & \textrm{adjoints}
 & \textrm{order} \uparrow
 \\ \hline
-(1) & a = u \cdot v & \bar{u} \ \ {\small +}{=} \ \ \bar{a} \cdot v & (6)
+(1) & a = u \cdot v & \overline{u} \ \ {\small +}{=} \ \ \overline{a} \cdot v & (6)
 \\
-    &               & \bar{v} \ \ {\small +}{=} \ \ \bar{a} \cdot u & (5)
+    &               & \overline{v} \ \ {\small +}{=} \ \ \overline{a} \cdot u & (5)
 \\ \hline
-(2) & b = \log a    & \bar{a} \ \ {\small +}{=} \ \ \bar{b} \cdot \frac{1}{a}
+(2) & b = \log a    & \overline{a} \ \ {\small +}{=} \ \ \overline{b} \cdot \frac{1}{a}
 & (4)
 \\ \hline
-&               & \bar{b} = 1 & (3)
+&               & \overline{b} = 1 & (3)
 \end{array}
 $$
 
@@ -132,16 +123,16 @@ $$
 \\
 (2) & b & = & \log a & \log v \cdot u & \approx 1.60
 \\ \hline
-(3) & \bar{b} & = & 1 & 1 & 1.00
+(3) & \overline{b} & = & 1 & 1 & 1.00
 \\ \hline
-(4) & \bar{a} & {\small +}{=} & \bar{b} \cdot \frac{1}{a}
+(4) & \overline{a} & {\small +}{=} & \overline{b} \cdot \frac{1}{a}
 & \frac{1}{u \cdot v}
 & \approx 0.21
 \\
-(5) & \bar{v} & {\small +}{=} & \bar{a} \cdot u
+(5) & \overline{v} & {\small +}{=} & \overline{a} \cdot u
 & \frac{1}{v} & \approx 0.26
 \\
-(6) & \bar{u} & {\small +}{=} & \bar{a} \cdot v
+(6) & \overline{u} & {\small +}{=} & \overline{a} \cdot v
 & \frac{1}{u} & \approx 0.83
 \end{array}
 $$
@@ -150,10 +141,10 @@ Before the algorithm begins, the independent variables $u$ and $v$ are
 assumed to be set to their values.  Then steps (1) and (2) calculate
 the values of subexpressions, first of $a = u \cdot v$ and then of $b
 = \log u \cdot v$, the final result.  To start the reverse pass in
-step (3), the final result $b$ has its adjoint $\bar{b}$ set to 1.
+step (3), the final result $b$ has its adjoint $\overline{b}$ set to 1.
 The reverse pass then increments the adjoint of each operand involved
-in the following expression.  The final adjoints $\bar{u}$ and
-$\bar{v}$ are the elements of the gradient of $f(u, v) = \log u \cdot
+in the following expression.  The final adjoints $\overline{u}$ and
+$\overline{v}$ are the elements of the gradient of $f(u, v) = \log u \cdot
 v$, evaluated at $\begin{bmatrix} 1.2 & 3.9 \end{bmatrix}$,
 $$
 \nabla f(1.2, 3.9)
@@ -172,14 +163,14 @@ $$
 The results of automatic differentiation can be verified with
 analytical derivatives,
 $$
-\bar{u}
+\overline{u}
 = \frac{\partial}{\partial u} \log u \cdot v
 = \frac{1}{u}
 \approx 0.83
 $$
 and
 $$
-\bar{v}
+\overline{v}
 = \frac{\partial}{\partial v} \log u \cdot v
 = \frac{1}{v}
 \approx 0.26.

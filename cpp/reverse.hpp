@@ -1,13 +1,16 @@
+#include <cmath>
+#include <cstddef>
+#include <functional>
+#include <iostream>
 #include <type_traits>
+#include <vector>
+
 namespace autodiff {
+
 template <typename T>
 using enable_if_arithmetic_t
 = std::enable_if_t<std::is_arithmetic_v<T>>;
-}
 
-
-#include <cstddef>
-namespace autodiff {
 std::size_t next_ = 0;
 
 class adj {
@@ -22,15 +25,10 @@ class adj {
   double val() const { return val_; }
   double idx() const { return idx_; }
 };
-}
 
-#include <vector>
-#include <functional>
-namespace autodiff {
 std::vector<std::function<void(std::vector<double>&)>> stack_;
-}
 
-namespace autodiff {
+
 /**
  * Propagate chain rule from the specified dependent variable.
  * @param[in] y
@@ -43,9 +41,7 @@ std::vector<double> chain(const adj& y) {
     (*chain_f)(adjoints);
   return adjoints;
 }
-}
 
-namespace autodiff {
 inline adj operator+(const adj& x1, const adj& x2) {
   adj y(x1.val() + x2.val());
   auto f = [=](std::vector<double>& adj) {
@@ -55,9 +51,7 @@ inline adj operator+(const adj& x1, const adj& x2) {
   stack_.emplace_back(f);
   return y;
 }
-}
 
-namespace autodiff {
 template <typename T, typename = enable_if_arithmetic_t<T>>
 inline adj operator+(const adj& x1, T x2) {
   adj y(x1.val() + x2);
@@ -74,9 +68,8 @@ inline adj operator+(T x1, const adj& x2) {
     });
   return y;
 }
-}
 
-namespace autodiff {
+
 inline adj operator*(const adj& x1, const adj& x2) {
   adj y(x1.val() * x2.val());
   stack_.emplace_back([=](std::vector<double>& adj) {
@@ -101,10 +94,8 @@ inline adj operator*(T x1, const adj& x2) {
     });
   return y;
 }
-}
 
-#include <cmath>
-namespace autodiff {
+
 inline adj exp(const adj& x) {
   adj y(std::exp(x.val()));
   auto f = [=](std::vector<double>& adj) {
@@ -113,4 +104,12 @@ inline adj exp(const adj& x) {
   stack_.emplace_back(f);
   return y;
 }
+
+
+
+std::ostream& operator<<(std::ostream& o, const adj& y) {
+  o << "(" << y.val() << ", " << y.idx() << ")";
+  return o;
 }
+
+}  // namespace autodiff

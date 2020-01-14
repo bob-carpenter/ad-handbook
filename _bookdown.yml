@@ -3,14 +3,18 @@ new_session: FALSE
 before_chapter_script: "before-chapter.R"
 rmd_files: [
   "index.Rmd",
-  "introduction.Rmd",
+
+  "derivatives.Rmd",
   "forward.Rmd",
   "reverse.Rmd",
-  "mixed.Rmd",
+  "nested.Rmd",
   "matrix-derivatives.Rmd",
+
   "scalars.Rmd",
   "matrix-arithmetic.Rmd",
   "hmm.Rmd",
+
   "cpp-implementation.Rmd",
+
   "bibliography.Rmd"
 ]

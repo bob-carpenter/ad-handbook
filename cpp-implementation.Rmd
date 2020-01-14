@@ -16,31 +16,34 @@ class dual {
   T val_;
   T tan_;
  public:
-  dual(const T& val, const T& tan = 0)
+  dual(const T& val = 0, const T& tan = 0)
       : val_(val), tan_(tan) { }
   const T& val() const { return val_; }
   const T& tan() const { return tan_; }
 };
 }
 ```
-The type of value is templated to allow flexible usage not only with
-respect to primitives, but with respect to nested automatic
-differentiation.  The default copy constructor `dual(const dual<T>&)`,
+The type of value is templated to supported nested forward mode.
+The default copy constructor `dual(const dual<T>&)`,
 destructor `~dual()`, and assignment operator `operator=(const
 dual<T>&)` are sufficient.
 
-Dual numbers are constructed from either a value and
-tangent, or just a value, with the tangent defaulting to zero.
+Dual numbers are constructed from either a value and a tangent, or
+just a value with default zero tangent, or with neither and default
+zero values and tangent.
 ```
 using autodiff::dual;
 dual<double> a(2.2, -3.1);
 dual<double> b(5);
+dual<double> c;
 ```
 The first has a value of 2.2 and a tangent of -3.1, whereas the second
-has a value of 5 and a tangent of 0 (the default).
+has a value of 5 and a tangent of 0 (the default) and the last a value
+and tangent of 0.
 
 The constructor is not declared implicit and thus will support the
-assignment of primitives with default tangent values.  The assignments
+assignment of primitives, giving them default 0 tangent values. The
+assignments
 ```
 dual<double> c = 5;
 ```
@@ -52,23 +55,27 @@ both invoke the default copy assignment operator `operator=(const
 dual<double>&)`; the former promotes `5` to `dual<double>(5)` using
 the non-explicit unary constructor.
 
-Functions and operators are coded in the same namespace as the
-autodiff variable class, following the dual arithmetic.
+Functions and operators are coded following the dual arithmetic.  All
+autodiff functionality will be declared in the namespace `autodiff`,
+though the namespace qualification will not be shown.  For example,
+exponentiation is defined following the dual arithmetic rule.
 ```
 #include <cmath>
-namespace autodiff {
 template <typename T>
 inline dual<T> exp(const dual<T>& x) {
   using std::exp;
   T y = exp(x.val());
   return dual(y, x.tan() * y);
 }
+```
+So is the logarithm function.
+
+```
 template <typename T>
 inline dual<T> log(const dual<T>& x) {
   using std::log;
   T y = log(x.val());
   return dual(y, x.tan() / y );
-}
 }
 ```
 The standard library `cmath` is required for definitions of `exp` and
@@ -76,17 +83,15 @@ The standard library `cmath` is required for definitions of `exp` and
 statements, e.g., `using std::exp`.  This allows the `exp` defined in
 the standard library `cmath` to be used for primitives and the `exp`
 defined for type `T` to be found by argument-dependent lookup for
-non-primitive value types `T`.
+autodiff value types `T`.
 
 Binary operations can be implemented following the dual number
 definitions.
 ```
-namespace autodiff {
 template <typename T>
 inline dual<T> operator*(const dual<T>& x1, const dual<T>& x2) {
   return dual(x1.val() * x2.val(),
               x1.tan() * x2.val() + x1.val() * x2.tan());
-}
 }
 ```
 This suffices for the case where both arguments are autodiff variables,
@@ -106,50 +111,55 @@ dual<double> u = 1.2;
 dual<double> v = u * 3.2;
 dual<double> w = 2 * u;
 ```
-The operator can be further overloaded in order to support these mixed types.
+The multiplication operator (`operator*`) can be further overloaded in
+order to support these mixed types.
 ```
 #include <type_traits>
-namespace autodiff {
 template <typename T, typename U,
           typename = std::enable_if_t<std::is_arithmetic_v<U>>>
 inline dual<T> operator*(const dual<T>& x1, const U& c2) {
   return dual(x1.val() * c2, x1.tan() * c2);
 }
+
 template <typename T, typename U,
           typename = std::enable_if_t<std::is_arithmetic_v<U>>>
 inline dual<T> operator*(const U& c1, const dual<T>& x2) {
   return dual(c1 * x2.val(), c1 * x2.tan());
 }
-}
 ```
-The third template argument is a C++ idiom preventing a match of the
-template function unless `U` is a primitive; the functions `enable_if_t`
-and `is_arithmetic_v` are declared in the standard library header
-`<type_traits>`.
+
+The third template argument invlves a C++ idiom that requires the
+template parameter `U` to be a primitive.^[Arithmetic types include
+only the built-in primitive types `float`, `double`, `long double`,
+`bool`, `char`, `short`, `int`, or `long int` as of C++17.]
+
+`U` being preventing a match of the template function unless
+`U` is a primitive; the functions `enable_if_t` and `is_arithmetic_v`
+are declared in the standard library header `<type_traits>`.
 
 ## Reverse-mode automatic differentiation in C++
 
 Like forward mode, reverse-mode automatic differentiation can be
-implemented through operator overloading in C++, using
-argument-dependent lookup to allow templated code to just work with
-autodiff variables.
+implemented through operator overloading in C++.  As with forward
+mode, argument-dependent lookup means that templated code will just
+work with autodiff variables as long as all primitive functions
+invoked are defined for autodiff types.
 
 A template using statement will reduce the boilerplate in requiring
 arithmetic arguments.
 ```
 #include <type_traits>
-namespace autodiff {
+
 template <typename T>
 using enable_if_arithmetic_t
 = std::enable_if_t<std::is_arithmetic_v<T>>;
-}
 ```
 
 The core code for reverse-mode autodiff defines a class `adj` used to
 store values and an index that will be unique for each subexpression.
 ```
 #include <cstddef>
-namespace autodiff {
+
 std::size_t next_ = 0;
 
 class adj {
@@ -162,7 +172,6 @@ class adj {
   double value() const { return val_; }
   double index() const { return idx_; }
 };
-}
 ```
 The global counter `next_` is used to assign unique identifiers in
 sequence to each autodiff variable as it is constructed, so it must be
@@ -198,14 +207,12 @@ stack as they are created.
 ```
 #include <vector>
 #include <functional>
-namespace autodiff {
+
 std::vector<std::function<void(std::vector<double>&)>> stack_;
-}
 ```
 The reverse sweep is implemented by the `chain()` function, which
 takes the variable `y` from which derivatives should be propagated.
 ```
-namespace autodiff {
 std::vector<double> chain(const adj& y) {
   std::vector<double> adjoints(y.idx() + 1, 0);
   adjoints[y.idx()] = 1;
@@ -215,9 +222,7 @@ std::vector<double> chain(const adj& y) {
     (*chain_f)(adjoints);
   return adjoints;
 }
-}
 ```
-
 First, the vector `adjoints` of adjoint values is allocated at
 size `y.idx_ + 1` so that it's large enough to the adjoints of every
 expression involved in the calculation of `y`;  this is guaranteed to
@@ -232,7 +237,6 @@ so that derivatives may be retrieved.
 
 A simple operation like addition is overloaded as follows.
 ```
-namespace autodiff {
 inline adj operator+(const adj& x1, const adj& x2) {
   adj y(x1.val() + x2.val());
   auto f = [=](std::vector<double>& adj) {
@@ -241,7 +245,6 @@ inline adj operator+(const adj& x1, const adj& x2) {
   };
   stack_.emplace_back(f);
   return y;
-}
 }
 ```
 First, the result `y` is constructed with value equal to adding the
@@ -263,7 +266,6 @@ While the above code will work by promoting arithmetic values to
 the adjoint class, it is more efficient to define further overloads
 that are more specific and avoid the redundant work on the stack.
 ```
-namespace autodiff {
 template <typename T, typename = enable_if_arithmetic_t<T>>
 inline adj operator+(const adj& x1, T x2) {
   adj y(x1.val() + x2);
@@ -272,6 +274,7 @@ inline adj operator+(const adj& x1, T x2) {
     });
   return y;
 }
+
 template <typename T, typename = enable_if_arithmetic_t<T>>
 inline adj operator+(T x1, const adj& x2) {
   adj y(x1 + x2.val());
@@ -280,7 +283,7 @@ inline adj operator+(T x1, const adj& x2) {
     });
   return y;
 }
-}
+
 ```
 Rather than defining a temporary for the continuation, it is pushed
 directly onto the stack.  The value is computed using the value from
@@ -290,7 +293,6 @@ propagation is to the adjoint operand.
 Multiplication is defined similarly, with the captured operand's
 values and indexes both being used.
 ```
-namespace autodiff {
 inline adj operator*(const adj& x1, const adj& x2) {
   adj y(x1.val() * x2.val());
   stack_.emplace_back([=](std::vector<double>& adj) {
@@ -299,6 +301,7 @@ inline adj operator*(const adj& x1, const adj& x2) {
     });
   return y;
 }
+
 template <typename T, typename = enable_if_arithmetic_t<T>>
 inline adj operator*(const adj& x1, T x2) {
   adj y(x1.val() * x2);
@@ -307,6 +310,7 @@ inline adj operator*(const adj& x1, T x2) {
     });
   return y;
 }
+
 template <typename T, typename = enable_if_arithmetic_t<T>>
 inline adj operator*(T x1, const adj& x2) {
   adj y(x1 * x2.val());
@@ -315,12 +319,11 @@ inline adj operator*(T x1, const adj& x2) {
     });
   return y;
 }
-}
 ```
 
 Non-linear functions like exponentiation also follow their
-definitions.  We need the `<cmath>` library for a
-definition of the exponential function.
+definitions.  We need the `<cmath>` library for a definition of the
+exponential function.
 ```
 #include <cmath>
 namespace autodiff {
@@ -334,7 +337,6 @@ inline adj exp(const adj& x) {
 }
 }
 ```
-
 The constructor defines the value of `y` to be the value of `x`
 exponentiated.  The adjoint is incremented using the captured value of
 `y`, namely `exp(x.val_)`, which is the derivative of `y` with respect
@@ -373,5 +375,5 @@ are then printed and the default success code (zero) is returned.
 
 The reverse-mode autodiff implementation is based on
 [@carpenter:2018].  Matrices are implemented with the Eigen C++
-library [@gunnebaud:2020].  [@vandevoorde:2017] is a good introduction
-to modern C++ template programming.
+library [@gunnebaud:2020].  A thorough and precise introduction to
+modern C++ template programming is [@vandevoorde:2017].

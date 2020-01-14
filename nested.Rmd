@@ -1,11 +1,10 @@
 # Nested Forward Mode
 
 Forward-mode automatic differentiation is defined with respect to an
-arbitrary scalar type.  So far, that has been a siple real scalar, so
-that forward mode computes derivatives.  By taking the scalar inside
-forward mode to itself be an automatic differentiation variable,
-higher-order derivatives may be calculated, even though only
-first-order derivatives need be defined.
+arbitrary scalar type.  With a real scalar type, forward mode computes
+derivatives.  By taking the scalar inside forward mode to itself be an
+automatic differentiation variable, higher-order derivatives may be
+calculated, even though only first-order derivatives need be defined.
 
 ## Forward nested in forward
 
@@ -17,12 +16,12 @@ forward-mode autodiff variable defining derivatives with respect to
 $w$, so that $\acute{v} = \frac{\partial v}{\partial w}.$ A different
 diacritic is used above the nested variable to distinguish it from the
 outer diacritic dual number.  A nested forward-mode autodiff variable
-thus of the form $\big\langle \langle v, \acute{v} \rangle, \ \langle
+is thus of the form $\big\langle \langle v, \acute{v} \rangle, \ \langle
 \dot{v}, \dot{\acute{v}} \rangle \big\rangle,$ where
 $$
-\acute{v} = \frac{\partial v}{\partial w},
+\acute{v} = \frac{\partial v}{\partial w}
 \qquad
-\dot{v} = \frac{\partial v}{\partial x}, \ \textrm{and}
+\dot{v} = \frac{\partial v}{\partial x}
 \qquad
 \dot{\acute{v}} = \frac{\partial^2 v}{\partial x \partial w}.
 $$
@@ -82,7 +81,8 @@ $$
 \cdot \langle z, \dot{z} \rangle
 = \langle u \cdot z, \dot{u} \cdot z + u \cdot \dot{z} \rangle.
 $$
-Plugging $\langle v, \acute{v} \rangle$ in for $u,$
+Plugging $\langle v, \acute{v} \rangle$ in for $u$ in the forward-mode
+rule for exponentiation,
 $$
 \begin{array}{rcl}
 \exp\!\big(\big\langle \langle v, \acute{v} \rangle, \
@@ -219,7 +219,7 @@ Hessians in $\mathcal{O}(N^2 \cdot g(N))$ time and $\mathcal{O}(N^2)$ space.
 
 ## Third-order derivatives and beyond
 
-The same logic applies for a third nesting of forward mode within
+The same logic applies for further nesting of forward mode within
 forward mode within forward mode.  The result will have eight nested
 values (four for the value and four for the tangent).  From most to
 least nested, these values represent third-order derivatives
@@ -236,12 +236,12 @@ The nesting may be iterated to compute fourth-order derivatives, etc.
 
 A more efficient way to compute Hessians is to nest reverse-mode
 autodiff in forward-mode autodiff.  Thus rather than scalars in
-$\langle u, \cdot{u} \rangle,$ the $u$ are taken to be reverse-mode
+$\langle u, \dot{u} \rangle,$ the $u$ are taken to be reverse-mode
 autodiff variables.  The forward pass records the subexpressions used
-in the evaluation of $f(\langle u, \cdot u \rangle)$ as before.  The
-reverse pass is then run from the final result $\cdot{u}$, to compute
-adjointws $\overline{\cdot{u}}.$  This is possible because all the
-calculations used to produce $\cdot{u}$ are scalar operations.
+in the evaluation of $f(\langle u, \dot{u} \rangle)$ as before.  The
+reverse pass is then run from the final result $\dot{u}$, to compute
+the adjoint $\overline{\dot{u}}.$  This is possible because all the
+calculations used to produce $\dot{u}$ are scalar operations.
 
 Suppose $f : \mathbb{R}^N \rightarrow \mathbb{R}$.  Let $\dot{u} =
 \frac{\partial u}{\partial x_n}$ for some $n \in 1{:}N.$
@@ -269,13 +269,13 @@ $$
 Applying the adjoint method to a forward-mode derivative results in a
 row of the Hessian matrix.  Thus to compute a Hessian using reverse
 mode nested in forward-mode autodiff requires $N$ function
-evaluations, one for each row $\nabla \frac{\partial}{\partial x_n}
+evaluations, one for each row $\nabla \frac{\partial}{\partial x_m}
 f(x)$ of the Hessian.  Assuming each function evaluation is
 $\mathcal{O}(g(n))$ leads to Hessian complexity of $\mathcal{O}(N
 \cdot g(N))$ time and $\mathcal{O}(N^2)$ space.  For example, if the
 time to compute $f(x)$ for $x \in \mathbb{R}^N$ is linear, i.e.,
 $\mathcal{O}(N),$ then the Hessian $\nabla \nabla^{\top} f(x)$ can be
-computed in $\mathcal{O}(N^2)$ time and space.
+computed in $\mathcal{O}(N^2).$
 
 ## Higher-order nesting of reverse in forward mode
 

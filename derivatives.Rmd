@@ -32,29 +32,6 @@ $$
 f(x + \epsilon) \approx f(x) + \epsilon \cdot f'(x).
 $$
 
-## Chain rule
-
-Automatic differentiation is driven by the chain rule, which states
-that
-
-$$
-\frac{\partial}{\partial x} f(u)
-= \frac{\partial}{\partial u} f(u)
-\cdot \frac{\partial}{\partial x} u
-= f'(u) \cdot \frac{\partial}{\partial x} u.
-$$
-Including the differentiated function in the denominator makes the
-relationship clearer,
-$$
-\frac{\partial f(u)}{\partial x}
-=
-\frac{\partial f(u)}{\partial u}
-\cdot
-\frac{\partial u}{\partial x}.
-$$
-
-
-
 ## Partial derivatives
 
 For a function $f:\mathbb{R}^N \rightarrow \mathbb{R}$, the partial
@@ -70,6 +47,31 @@ $$
 That is, we differentiate $f(x)$ with respect to $x_n$, holding all
 other values $x_1, \ldots, x_{n - 1}, x_{n + 1}, \ldots, x_N$
 constant.
+
+## Chain rule
+
+Automatic differentiation is driven by the chain rule, which states
+that
+
+$$
+\frac{\partial}{\partial x} f(u)
+= \frac{\partial}{\partial u} f(u)
+\cdot \frac{\partial}{\partial x} u
+= f'(u) \cdot \frac{\partial}{\partial x} u.
+$$
+Including the differentiated function in the numerator makes the
+relationship clearer,
+$$
+\frac{\partial f(u)}{\partial x}
+=
+\frac{\partial f(u)}{\partial u}
+\cdot
+\frac{\partial u}{\partial x}.
+$$
+
+
+
+
 
 ## Gradients
 
@@ -125,7 +127,8 @@ vector by definition, whereas $v$ is a standard column vector.
 
 ## Directional derivatives
 
-A unit vector $u \in \mathbb{R}^N$, i.e., one where where $\sum_{n =
+A unit vector $u \in \mathbb{R}^N$, i.e., one where where $u^{\top}
+\cdot u = \sum_{n =
 1}^N u_n^2 = 1$, picks out a point on a sphere and hence a direction.
 The derivative of $f$ along a unit vector $u$ at the point $x$ is called
 a directional derivative, as it provides the change in $f$ in the
@@ -135,7 +138,7 @@ direction picked out by $u.$
 ## Jacobians
 
 Consider a smooth multivariate function $f:\mathbb{R}^N \rightarrow
-\mathbb{R}^M$.  Its Jacobian function, $J_f:\mathbb{R}^N \rightarrow
+\mathbb{R}^M$.  Its Jacobian function, $\textrm{J}_f:\mathbb{R}^N \rightarrow
 \left( \mathbb{R}^N \times \mathbb{R}^M\right),$ maps a vector $x \in
 \mathbb{R}^N$ to the $M \times N$ matrix of partial derivatives of
 each element of $f(x)$ with respect to each $x_n$,
@@ -167,8 +170,8 @@ $$
 \end{bmatrix},
 $$
 where $f_m(x)$ is defined by selecting the $m$-th element of
-$f(x)$,^[We will write $v[i]$ and $v_i$ interchangeably for the
-$i$-th element of vector $v$, and similarly for $m[i, j]$ and
+$f(x)$,^[Notations $v[i]$ and $v_i$ will be used interchangeably for
+the $i$-th element of vector $v$, and similarly for $m[i, j]$ and
 $m_{i,j}$ for the elements of matrices.]
 $$
 f_m(x) = f(x)[m].
@@ -225,7 +228,10 @@ $$
 = \frac{\partial^2}{\partial x_m \partial x_n} f(x)
 = \frac{\partial}{\partial x_m} \frac{\partial}{\partial x_n} f(x).
 $$
-The Hessian matrix is symmetric, with $\textrm{H}_f(x)[m, n] = \textrm{H}_f(x)[n, m]$.
+The Hessian matrix is symmetric, with
+$$
+\textrm{H}_f(x)[m, n] = \textrm{H}_f(x)[n, m].
+$$
 The diagonals are the second partial derivatives,
 $$
 \textrm{H}_f(x)[n, n]
@@ -285,5 +291,5 @@ $$
 
 ## References {-}
 
-An excellent reference for both matrix algebra and differential
-calculus is [@magnus:2019].
+An excellent reference for both matrix algebra and multivariate
+differential calculus is [@magnus:2019].

@@ -23,26 +23,28 @@ $$
 
 If $C$ is an $K \times L$ matrix and $A$ is a $M \times N$ matrix,
 then the Jacobian $\frac{\partial C}{\partial A}$ has dimensions $(K
-\times L) \times (M \times N).$ These results may be read in terms of
-vectors and Jacobians by collapsing all matrices to vectors.  Or they
-may be read directly by raising the type of operations and multiplying
-the $(K \times L) \times (M \times N)$ Jacobian by the $M \times N$
-matrix differential.^[In the automatic differentiation literature in
-computer science, this is sometimes called a "tensor" product, where
-"tensor" just means array of arbitrary dimensionality and should not
-be confused with the tensor calculus
+\times L) \times (M \times N).$ These results may be construed as
+involving standard vectors and Jacobians by collapsing all matrices to
+vectors.  Or they may be read directly by raising the type of
+operations and multiplying the $(K \times L) \times (M \times N)$
+Jacobian by the $M \times N$ matrix differential.^[In the automatic
+differentiation literature in computer science, this is sometimes
+called a "tensor" product, where "tensor" just means array of
+arbitrary dimensionality and should not be confused with the tensor
+calculus used in physics.]
 
 
 
 ## Forward mode
 
-As with scalars, the tangent of a matrix (or vector) $U$ is defined
-relative to a scalar variable $x$ as
+The definitions of values and tangents remain the same when moving to
+vector or matrix functions.  As with scalars, the tangent of a matrix
+(or vector) $U$ is defined relative to a scalar variable $x$ as
 
 $$
 \dot{U} = \frac{\partial U}{\partial x}.
 $$
-This derivative defined elementwise, with
+This derivative is defined elementwise, with
 $$
 \dot{U}_{i, j} =\frac{\partial U_{i, j}}{\partial x}.
 $$
@@ -71,6 +73,60 @@ $$
 As with forward-mode autodiff for scalars, this matrix derivative rule is
 straightforward to work out and to implement.
 
+The tangent rules for matrix operations carry over neatly from the
+scalar case.  For example, $C = A + B$ is the sum of two matrices, the
+corresponding tangent rule is
+$$
+\dot{C} = \dot{A} + \dot{B}.
+$$
+Here and throughout, matrices used in arithmetic operations will be
+assumed to conform to the required shape and size constraints in the
+expressions in which they are used.  For $A + B$ to be well formed,
+$A$ and $B$ must both be $M \times N$ matrices (i.e., they must have
+the same number of rows and columns).
+
+Similarly, if $C = A \cdot B$ is the product of two matrices, the
+tangent rule is the same as that for scalars,
+$$
+\dot{C} = \dot{A} \cdot B + A \cdot \dot{B}.
+$$
+
+Simple tangent rules exist for many linear algebra operations, such as
+inverse.  If $C = A^{-1}$, then the tangent rule is
+$$
+\dot{C} = -C \cdot \dot{A} \cdot C.
+$$
+Results such as these are derived through algebraic manipulation and
+differentiation (see \cite{giles:2008b} for general rules).  For
+inverse, because
+$$
+C \cdot A = A^{-1} \cdot A = \textrm{I}.
+$$
+Differentiating both sides yields
+$$
+\frac{\partial}{\partial x} C \cdot A
+=
+\frac{\partial}{\partial x} \textrm{I}.
+$$
+Replacing with dot notation yields
+$$
+\dot{C} \cdot A + C \cdot \dot{A} = 0.
+$$
+Rearranging the terms produces
+$$
+\dot{C} \cdot A = - C \cdot \dot{A}.
+$$
+Multiplying both sides of the equation on the right by $A^{-1}$ gives
+$$
+\dot{C} \cdot A \cdot A^{-1} = -C \cdot \dot{A} \cdot A^{-1}.
+$$
+This reduces to the final simplified form
+$$
+\dot{C} = -C \cdot \dot{A} \cdot C,
+$$
+after dropping the factor $A \cdot A^{-1} = \textrm{I}$ and replacing
+$A^{-1}$ with its value $C$.
+
 
 
 ## Reverse mode
@@ -80,7 +136,7 @@ N$ matrix involved in the computation of a final result $y$, then
 $$
 \overline{U} = \frac{\partial y}{\partial U},
 $$
-with elements
+with entries defined elementwise by
 $$
 \overline{U}_{i, j}
 = \frac{\partial y}{\partial U}[i, j]
@@ -116,8 +172,7 @@ $$
 = \textrm{J}^{\top}_f(A) \cdot \frac{\partial y}{\partial B},
 $$
 where the Jacobian function $\textrm{J}_f$ is generalized to matrices
-by^[This can again be understood by extending Jacobians to matrices or
-by flattening.]
+by^[Matrix Jacobians may be understood by generalizing definitions to matrices or by flattening.]
 $$
 \textrm{J}_f(U) = \frac{\partial f(U)}{\partial U}.
 $$
@@ -176,13 +231,16 @@ $$
 $$
 where the notation $U_{m, \cdot}$ indicates the $m$-th row of $U$,
 $U_{\cdot, m}$ the $m$-th column of $U$, and $\textrm{Tr}(U)$ the
-trace of a square matrix $U$ defined by
+trace of an $N \times N$ square matrix $U$ defined by
 $$
-\textrm{Tr}(U) = \sum_{n = 1} U_{n, n}.
+\textrm{Tr}(U) = \sum_{n = 1}^N U_{n, n}.
 $$
-Expplicitly differentiating with respect to the scalar $x$ yields
+Clarifying that differentiation is with respect to a distinguished
+scalar variable $x$ on both sides of the above equation yields
 $$
 \frac{\textrm{d} y}{\textrm{d} x}
+=
+\frac{\textrm{d}}{\textrm{d} x}
 = \textrm{Tr}\left(
     \overline{C}^{\top}
     \cdot \frac{\textrm{d}C}{\textrm{d}x}
@@ -285,5 +343,5 @@ $$
 
 ## References {-}
 
-The section on trace algebra exapnds the derivation presented in
-[@giles:2008,@giles:2008b].
+The section on trace algebra fills in the steps of the derivation presented in
+[@giles:2008; -@giles:2008b].

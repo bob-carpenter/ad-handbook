@@ -4,7 +4,7 @@ title: 'Automatic Differentiation Handbook'
 author: 'Bob Carpenter, editor'
 date: '2019'
 bibliography: all.bib
-biblio-style: "acm"
+biblio-style: "apalike"
 link-citations: true
 output:
   bookdown::tufte_html_book:
@@ -34,14 +34,13 @@ Derivative computations add only a constant overhead to each operation
 used to compute the function value, so that the differentiable
 function has the same order of complexity as the original function.
 
-In addition to describing various forms of automatic differnetiation,
-this book supplies an encyclopedic collection of tangent and adjoint
-rules for forward-mode and backward-mode automatic differentiation
-covering most widely used scalar, vector, matrix, and probability
-functions.
+After describing the standard forms of automatic differentiation, this
+book supplies an encyclopedic collection of tangent and adjoint rules
+for forward-mode and backward-mode automatic differentiation, covering
+most widely used scalar, vector, matrix, and probability functions.
 
 The appendix contains working example code for forward-mode,
-reverse-mode and mixed-mode automatic differentiation.
+reverse-mode, and mixed-mode automatic differentiation.
 
 
 ## Why derivatives? {-}
@@ -51,8 +50,9 @@ relative to a change in anoher quantity, are ubiquitous in applied
 mathematics.  Although derivatives can be computed mechanistically by
 hand in many cases, the process is painstaking and error prone.
 
-The present text is motivated by statistical inference
-algorithms that use first and second-order derivatives, e.g.,
+The present text is motivated by the fact that most state-of-the-art
+statistical inference algorithms are based on first- or higher-order
+derivatives.  Examples include
 
 * quasi-Newton optimization for penalized maximum likelihood
 estimation (first-order derivatives with approximate second-order
@@ -60,7 +60,7 @@ derivatives),
 * Laplace approximation for standard errors and approximate Bayesian
 posteriors (second-order derivatives),
 * Hamiltonian Monte Carlo sampling for Bayesian posterior inference
-(first-order derivatives with Euclidean geometry and up to third-order
+(first-order derivatives with Euclidean geometry and third-order
 derivatives with Riemannian geometry), and
 * stochastic gradient descent for nested expectations in variational
 inference (Monte Carlo samples of first-order derivatives).
@@ -103,5 +103,5 @@ second-order derivatives of a function $f:\mathbb{R}^N \rightarrow
 \mathbb{R}.$ Hessians require $N$ passes of reverse mode nested in
 forward mode.  Just as forward-mode automatic differentiation may be
 used to efficiently calculate gradient-vector products, reverse mode
-nested in forward mode can be used in the same way to efficiently
-compute Hessian-vector products.
+nested in forward mode can be used to compute Hessian-vector products
+efficiently.
