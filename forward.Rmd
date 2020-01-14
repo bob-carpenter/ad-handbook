@@ -176,7 +176,7 @@ by taking $u_n$ to be the unit vector pointing along the $n$-th axis,
 $$
 u_n =
 \Big[
-\begin{array}[t]
+\begin{array}[t]{c}
 \
 \underbrace{0  \cdots 0 }_{n - 1 \ \textrm{zeros}}
 \ \ 1 \ \

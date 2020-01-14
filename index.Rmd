@@ -4,7 +4,7 @@ title: 'Automatic Differentiation Handbook'
 author: 'Bob Carpenter, editor'
 date: '2019'
 bibliography: all.bib
-biblio-style: "apalike"
+# biblio-style: "acm"
 link-citations: true
 output:
   bookdown::tufte_html_book:
