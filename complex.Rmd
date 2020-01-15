@@ -1,0 +1,9 @@
+# Complex Numbers
+
+A complex number is described in terms of a real component $x$ and
+imaginary component $w$ as $z = x + w \cdot i,$ where $i = \sqrt{-1}.$
+There is nothing special about autodiffing complex functions in that
+they can be considered as just functions on pairs $(x, w).$ Both
+adjoints $\bar{x}, \bar{w}$ and tangents $\dot{x}$ and $\dot{w}$ may
+be computed.  What is not computed is complex derivatives, that is
+differentiating with respect to the entire complex number $z$.

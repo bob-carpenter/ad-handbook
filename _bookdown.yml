@@ -16,6 +16,10 @@ rmd_files: [
   "scalars.Rmd",
   "matrix-arithmetic.Rmd",
   "hmm.Rmd",
+  "odes.Rmd",
+  "algebraic-equations.Rmd",
+  "complex.Rmd",
+  "integration.Rmd",
 
   "cpp-implementation.Rmd",
 

@@ -1,0 +1,5 @@
+# Algebraic Equations
+
+Algebraic equations take the form $f(x) = 0.$ It's possible to
+calculate sensitivies of these solutions and hence automatically
+differentiate through solvers.

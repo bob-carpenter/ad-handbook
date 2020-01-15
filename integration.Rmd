@@ -1,0 +1,7 @@
+# Definite Integrals
+
+It is possible to autodiff through definite integrals of the form
+$$
+y = \int_a^b f(x, \theta) \, \textrm{d} x.
+$$
+to calcuate derivatives with respect to $\theta.$

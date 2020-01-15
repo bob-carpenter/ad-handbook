@@ -1,0 +1,8 @@
+# Ordinary Differential Equations
+
+A differential equation solver takes a system function defining the
+differential equation, a starting state, a starting time and a set of
+requested solution times.  The solutions to the differential equation
+given the starting state are then calculated and returned.  To be
+useful for automatic differentiation, the sensitivies of the solution
+to their input must be calculated.
