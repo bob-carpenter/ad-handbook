@@ -5,6 +5,9 @@ rmd_files: [
   "index.Rmd",
 
   "derivatives.Rmd",
+
+  "finite-differences.Rmd",
+
   "forward.Rmd",
   "reverse.Rmd",
   "nested.Rmd",
