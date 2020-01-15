@@ -28,7 +28,7 @@ statistical functions.
 
 ## Overview of this book {-}
 
-Automatic differentiation is a general technique for lifting a
+Automatic differentiation is a general technique for conerting a
 function computing values to one that also computes derivatives.
 Derivative computations add only a constant overhead to each operation
 used to compute the function value, so that the differentiable
