@@ -1,0 +1,76 @@
+# Finite Differences
+
+Derivatives may be computed numerically using finite differences.
+There are many ways that derivatives can be computed using finite
+differences, and this chapter does not attempt a complete survey
+of the field.
+
+## Derivatives with one difference
+
+The simplest for of finite differences directly follows the definition of
+derivatives.  Suppose $f:\mathbb{R} \rightarrow \mathbb{R}$ is a smooth unary function.  Then by definition,
+$$
+f'(x)
+= \frac{\textrm{d}}{\textrm{d}x} f(x)
+= \lim_{\epsilon \rightarrow 0} \frac{f(x) - f(x + \epsilon)}{\epsilon}.
+$$
+By fixing an $\epsilon > 0,$ an approximation to the derivative may be
+calculated using finite differences as
+$$
+f'(x) \approx \frac{f(x + \epsilon) - f(x)}{\epsilon}.
+$$
+
+Multiplying both sides by $\epsilon,$
+$$
+\epsilon \cdot f'(x) \approx f(x + \epsilon) - f(x),
+$$
+and then adding $f(x)$ to both sides yields
+$$
+f(x + \epsilon)
+\approx f(x) + \epsilon \cdot f'(x).
+$$
+This shows that finite differences are only going to be accurate to the
+extent that $f$ can be well approximated by a linear function in the
+neighborhood of $x.$
+
+
+## Partial derivatives
+
+For multivariate functions $f:\mathbb{R}^N \rightarrow \mathbb{R},$
+partial derivatives $\frac{\partial}{\partial x_n} f(x)$ are also
+calculated following their definition by binding $x_1, \ldots x_{n-1},
+x_{n+1}, \ldots x_{N}$ and applying finite differences to the
+resulting unary function $f(u) = f(x_1, \ldots, x_{n-1}, u, x_{n+1},
+\ldots, x_N).$  This method is applicable no matter what method is used for
+finite differences of unary functions.
+
+## Arithmetic precision
+
+It would seem that better and better approximations would be available
+as $\epsilon \rightarrow 0,$ but that is unfortunately not the case
+with fixed-precision, floating-point arithmetic.  Instead, making
+$\epsilon$ smaller than machine precision (about $10^{-14}$ in IEEE
+double-precision arithmetic) leads to rounding of $1 + \epsilon$ to
+$1$ and all precision is lost.  More generally, if $\epsilon$ is of
+order $1$, then no precision is lost in $1 + \epsilon$.  But if
+$\epsilon << 1,$ arbitrary amounts of precision can be lost in
+calculating $1 + \epsilon.$.  A fixed $\epsilon = 10^{-n}$ loses $n$
+digits of precision in calculating $1 + \epsilon$.
+
+A typical choice of $\epsilon$ for performing finite differences using
+double-precision floating-point arithmetic (type `double` in C++) is
+$10^{-8}$, in an attempt to avoid catastrophic rounding in the
+arithmetic while also keeping $\epsilon$ small enough that the
+finite-difference approximation is accurate.  With double-precision
+arithmetic, this reduces precision from $10^{-15}$ to roughly
+$10^{-7},$ or roughly the equivalent of single-preicsion arithmetic
+(type `float` in C++).
+
+
+## Efficiency of finite differences
+
+Evaluating a derivative by simple finite differences requires two
+function evaluations.  Evaluating an $N$-dimensional gradient by
+finite differences requires $N + 1$ function evaluations, because
+$f(x)$ may be reused for each $x_n$ with respect to which derivatives
+are being taken.
