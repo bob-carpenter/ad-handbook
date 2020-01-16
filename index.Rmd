@@ -28,7 +28,7 @@ statistical functions.
 
 ## Overview of this book {-}
 
-Automatic differentiation is a general technique for conerting a
+Automatic differentiation is a general technique for converting a
 function computing values to one that also computes derivatives.
 Derivative computations add only a constant overhead to each operation
 used to compute the function value, so that the differentiable
@@ -46,7 +46,7 @@ reverse-mode, and mixed-mode automatic differentiation.
 ## Why derivatives? {-}
 
 Applications of derivatives, which measure the change in one quantity
-relative to a change in anoher quantity, are ubiquitous in applied
+relative to a change in another quantity, are ubiquitous in applied
 mathematics.  Although derivatives can be computed mechanistically by
 hand in many cases, the process is painstaking and error prone.
 
@@ -54,16 +54,38 @@ The present text is motivated by the fact that most state-of-the-art
 statistical inference algorithms are based on first- or higher-order
 derivatives.  Examples include
 
-* quasi-Newton optimization for penalized maximum likelihood
-estimation (first-order derivatives with approximate second-order
-derivatives),
-* Laplace approximation for standard errors and approximate Bayesian
-posteriors (second-order derivatives),
-* Hamiltonian Monte Carlo sampling for Bayesian posterior inference
-(first-order derivatives with Euclidean geometry and third-order
-derivatives with Riemannian geometry), and
-* stochastic gradient descent for nested expectations in variational
-inference (Monte Carlo samples of first-order derivatives).
+* maximum likelihood and maximum a posteriori estimation with
+quasi-Newton or gradient descent methods (first-order derivatives),
+* Bayesian posterior sampling with Hamiltonian Monte Carlo sampling
+(first-order derivatives of log density functions for Euclidean
+geometry; third-order for Riemannian),
+* standard error or posterior covariance estimation with Laplace
+approximations (second-order derivatives of log density functions),
+* maximum marginal likelihood or maximum marginal a posterior
+estimation with Monte Carlo expectation maximization (first-order
+derivatives of expectations computed via Monte Carlo samples)
+* variational inference with stochastic gradient descent based
+on nested expectations (first-order derivatives of
+expectations computed via Monte Carlo samples).
+
+Automatic differentiation is also useful for computing the sensitivity
+of one quantity to another, expressed as a derivative.  Examples in
+statistical inference include first- and second-order derivatives
+to characterize
+
+* data sensitivity---the sensitivity of a maximum likelihood or
+Bayesian parameter estimate to one or more data points,
+* hyperparameter sensitivity---the sensitivity of a maximum
+likelihood or Bayesian parameter estimate to one or more
+model hyperparameters, and 
+* parameter sensitivity---the sensitivity of a posterior log density
+or a log likelihood to the model parameters for a given data set.
+
+Sensitivities are also of interest in many numerical analysis
+applications including
+
+* sensitivity of the solution to a system of algebraic or differential
+equations to initial conditions or parameters.
 
 ## Why automatic differentiation? {-}
 
@@ -97,7 +119,7 @@ first-order derivatives of a function $f:\mathbb{R}^N \rightarrow
 \mathbb{R}^M.$ Jacobians require $N$ passes of forward-mode or $M$
 passes of reverse-mode automatic differentiation.
 
-Nesting reverse-mode automatic differentation within forward mode
+Nesting reverse-mode automatic differentiation within forward mode
 provides efficient calculation of Hessians, that is the matrix of all
 second-order derivatives of a function $f:\mathbb{R}^N \rightarrow
 \mathbb{R}.$ Hessians require $N$ passes of reverse mode nested in

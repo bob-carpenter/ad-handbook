@@ -39,7 +39,7 @@ $$
 \frac{\partial}{\partial z} \mathbb{E}[g(y, z)]
 = \mathbb{E}\left[ \frac{\partial}{\partial z} g(y, z) \right].
 $$
-With Monte Carlo calculations, the derivative may be approximated as
+The Monte Carlo approach is to approximate the derivative with
 $$
 \frac{\partial}{\partial z} \mathbb{E}[g(y, z)]
 \approx
@@ -50,3 +50,48 @@ The internal derivative $\frac{\partial}{\partial z}g(y^{(m)}, z)$ may
 be computed via automatic differentiation and the results summed.  No
 new rules of automatic differentiation are required, as the resulting
 term is a simple sum.
+
+## Max marginal optimization and sampling
+
+A common application for Monte Carlo integration is computing marginal
+densities, 
+$$
+p_{\Phi}(\phi) = \int_{\mathbb{R}} p_{\Phi,\Theta}(\phi, \theta) \, \textrm{d}\theta,
+$$
+for a given input value $\phi$.  A Monte Carlo approximation can be
+calculated as
+$$
+p_{\Phi}(\phi)
+\approx
+\frac{1}{M} \sum_{m = 1}^M
+  p_{\Phi, \Theta}(\phi, \theta^{(m)}),
+$$
+where for $m \in 1:M,$
+$$
+\theta^{(m)} \sim p_{\Theta \mid \Phi}(\theta \mid \phi).
+$$
+
+Gradient-based samplers or optimizers when $\Phi$ is multivariate
+require the gradient $\nabla p_{\Phi}(\phi)$.  This can be
+calculated via Monte Carlo as
+$$
+\nabla p_{\Phi}(\phi)
+\approx
+\frac{1}{M} \sum_{m=1}^M
+  \nabla p_{\Phi, \Theta}(\phi, \theta^{(m)}).
+$$
+
+For example, the maximum marginal likelihood estimate $\phi^*$ is
+defined as an optimization,
+
+$$
+\phi^* = \textrm{arg max}_{\phi} \ p_{\Phi}(\phi).
+$$
+Optimizing $p_{\Phi}$ with the marginalization computed
+by Markov chain Monte Carlo methods leads to an algorithm known as
+Markov chain Monte Carlo expectation maximization (MCMC-EM).
+
+## Stochastic gradients
+
+These are all examples of stochastic gradient calculations.  
+
