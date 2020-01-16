@@ -16,6 +16,23 @@ terms of use for GitHub.
 
 ## Building the book
 
+#### Prerequisites
+
+The following R packages must be installed in order to build the book:
+
+```
+tufte
+reshpae
+```
+
+They can be installed using, e.g.,
+
+```
+> install.pacakges('tufte')
+```
+
+#### Build steps
+
 To build the HTML version of the book from R using the
 `bookdown` package,
 
