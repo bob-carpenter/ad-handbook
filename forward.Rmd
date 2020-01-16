@@ -7,7 +7,7 @@ with a single input and multiple outputs.
 
 Suppose $x \in \mathbb{R}$ and that $v = f(u)$.  We write a
 dot over an expression to indicate a derivative with respect to a
-distinuished variable $x$,
+distinguished variable $x$,
 $$
 \dot{u} = \frac{\partial}{\partial x} u.
 $$
