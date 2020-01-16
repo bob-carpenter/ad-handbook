@@ -1,0 +1,52 @@
+# Monte Carlo Methods
+
+Monte Carlo methods are used to compute high-dimensional integrals
+corresponding to expectations.  For example, if $Y \in \mathbb{R}$ is
+a real-valued random variable and $f:\mathbb{R} \rightarrow
+\mathbb{R}$ is a real-valued function, then the expectation of the
+function applied to the random variable is
+$$
+\mathbb{E}[f(y)]
+= \int_{\mathbb{R}} f(y) \cdot p_Y(y) \, \textrm{d} y,
+$$
+where $p_Y(y)$ is the density function for $Y$.
+
+Suppose it possible to generate a sequence of random draws
+$$
+y^{(1)}, \ldots, y^{(m)}, \ldots \sim p_Y(y)
+$$
+distributed according to $p_Y(y)$.  With these random draws, the
+expectation may be reformulated as as the limit of the average
+value of the function applied to the draws,
+$$
+\mathbb{E}[f(y)]
+= 
+\lim_{M \rightarrow \infty} \frac{1}{M} \sum_{m=1}^M f(y^{(m)}).
+$$
+Given finite computation time, an approximate result can be computed
+for some fixed $M$ as
+$$
+\mathbb{E}[f(y)]
+\approx \frac{1}{M} \sum_{m=1}^M f(y^{(m)}).
+$$
+This is known as a Monte Carlo method, after the casino of that name
+in Monaco.
+
+If the function $f(y)$ depends on other parameters $z$, e.g., $f(y) =
+g(y, z)$ and derivatives are required of the expectation, they can be
+moved inside the integral.  That is, taking the expetactation over random variable $Y$ and ddifferentiating with respect to $z$ yields
+$$
+\frac{\partial}{\partial z} \mathbb{E}[g(y, z)]
+= \mathbb{E}\left[ \frac{\partial}{\partial z} g(y, z) \right].
+$$
+With Monte Carlo calculations, the derivative may be approximated as
+$$
+\frac{\partial}{\partial z} \mathbb{E}[g(y, z)]
+\approx
+\frac{1}{M} \sum_{m=1}^M \frac{\partial}{\partial z} g(y^{(m)}, z).
+$$
+
+The internal derivative $\frac{\partial}{\partial z}g(y^{(m)}, z)$ may
+be computed via automatic differentiation and the results summed.  No
+new rules of automatic differentiation are required, as the resulting
+term is a simple sum.

@@ -1,0 +1,20 @@
+# Changes of Variables
+
+When working with an inference or optimization algorithm, it is
+convenient to have functions defined on all of $\mathbb{R}^N.$ Yet
+most models are more naturally formulated in terms of constrained
+parameters like probabilities (values in $[0, 1]$), correlations
+(values in $[-1, 1]$), variances (in $[0, \infty)$).  Even more
+complex constraints are imposed on covariance matrices (positive
+definite matrices) or simplexes (non-negative sequence of values
+summing to one).
+
+In all of these cases, it is possible to transform the constrained
+variable to the unconstrained scale.  When transforming back from the
+constrained scale to the unconstrained scale, a Jacobian adjustment is
+necessary to account for the change of variables.  And to make the
+resulting function differentiable, this Jacobian must be
+differentiable.
+
+This chapter collects autodiff results for the inverses of several
+popular constraining transforms.
