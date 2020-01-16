@@ -20,8 +20,9 @@ rmd_files: [
   "algebraic-equations.Rmd",
   "complex.Rmd",
   "integration.Rmd",
+  "transforms.Rmd",
+  "monte-carlo.Rmd",
 
-  "cpp-implementation.Rmd",
-
-  "bibliography.Rmd"
+  "bibliography.Rmd",
+  "cpp-implementation.Rmd"
 ]
