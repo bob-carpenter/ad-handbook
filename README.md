@@ -22,7 +22,7 @@ The following R packages must be installed in order to build the book:
 
 ```
 tufte
-reshpae
+reshape
 ```
 
 They can be installed using, e.g.,
