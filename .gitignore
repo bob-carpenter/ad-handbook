@@ -274,3 +274,9 @@ TSWLatexianTemp*
 
 # Makeindex log files
 *.lpz
+
+## Rendered book
+
+_book/
+_main.pdf
+
