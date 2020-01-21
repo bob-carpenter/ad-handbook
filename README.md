@@ -3,10 +3,34 @@
 This is the source repository for the *Automatic Differentiation
 Handbook*.
 
+## Pre-built pdf
+
+Here's a pre-built pdf of a recent (but perhaps not the latest) **DRAFT**:
+
+* [ad-handbook-draft.pdf](./ad-handbook-draft.pdf).
+
+I don't have a pre-built version of the HTML yet, but I'll try to
+figure out how to push that to my GitHub pages repo automatically one
+of these days.
+
+
 ## Contributing
 
-Please create pull requests or simply leave an issue.  All
-contributions will be credited in the book itself.
+Please create
+
+* issues for feature requests or reporting bugs/typos/brainos
+* pull requests for contributions
+
+If you contribute and want to be listed by name rather than GitHub
+handle, please include that in the PR.  Also, if you'd rather not
+be listed, say that, too!
+
+## The C++ reference implementation
+
+* C++ reference code directory: [`cpp/`](./cpp)
+
+* Example directory:  [`cpp/examples/`](./cpp/examples)
+
 
 ## Licensing
 
@@ -14,16 +38,20 @@ The code is licensed under BSD-3 and the text under CC-BY-ND-NC 4.0.
 All contributions are made in accorance with this license under the
 terms of use for GitHub.
 
+
 ## Building the book
 
 #### Prerequisites
 
+The following system package must be installed:
+
+* pandoc
+
 The following R packages must be installed in order to build the book:
 
-```
-tufte
-reshape
-```
+* tufte
+* reshape
+
 
 They can be installed using, e.g.,
 

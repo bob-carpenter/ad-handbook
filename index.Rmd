@@ -61,7 +61,7 @@ quasi-Newton or gradient descent methods (first-order derivatives),
 geometry; third-order for Riemannian),
 * standard error or posterior covariance estimation with Laplace
 approximations (second-order derivatives of log density functions),
-* maximum marginal likelihood or maximum marginal a posterior
+* maximum marginal likelihood or maximum marginal a posteriori
 estimation with Monte Carlo expectation maximization (first-order
 derivatives of expectations computed via Monte Carlo samples)
 * variational inference with stochastic gradient descent based
