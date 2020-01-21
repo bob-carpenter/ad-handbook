@@ -49,6 +49,7 @@ The following system package must be installed:
 
 The following R packages must be installed in order to build the book:
 
+* bookdown
 * tufte
 * reshape
 
