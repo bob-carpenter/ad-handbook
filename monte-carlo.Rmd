@@ -128,3 +128,8 @@ fixed.  The penultimate step involves the fundamental rule of Monte
 Carlo integration, assuming $y^{(m)} \sim p_{Y \mid \Theta}(y \mid
 \theta).$ The final step is the approximation resulting from using
 only finitely many draws.
+
+## References
+
+[@mohamed:2019] is a thorough reference to using Monte Carlo gradients in probabilistic
+algorithms.

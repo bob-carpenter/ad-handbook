@@ -23,6 +23,6 @@ rmd_files: [
   "transforms.Rmd",
   "monte-carlo.Rmd",
 
-  "bibliography.Rmd",
+#  "bibliography.Rmd",
   "cpp-implementation.Rmd"
 ]

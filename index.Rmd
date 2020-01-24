@@ -2,7 +2,7 @@
 knit: 'bookdown::render_book("index.Rmd", "tufte_html_book")'
 title: 'Automatic Differentiation Handbook'
 author: 'Bob Carpenter, editor'
-date: '2019'
+date: '2020'
 bibliography: all.bib
 # biblio-style: "acm"
 link-citations: true
@@ -77,7 +77,7 @@ to characterize
 Bayesian parameter estimate to one or more data points,
 * hyperparameter sensitivity---the sensitivity of a maximum
 likelihood or Bayesian parameter estimate to one or more
-model hyperparameters, and 
+model hyperparameters, and
 * parameter sensitivity---the sensitivity of a posterior log density
 or a log likelihood to the model parameters for a given data set.
 
