@@ -82,37 +82,38 @@ $$
 The following derivation provides the basis for using Monte Carlo
 methods to calculate gradients.
 \begin{eqnarray*}
-\nabla_{\theta} \, \mathbb{E}[f(Y) \mid \theta]
+{\large \nabla}_{\!\theta} \ \mathbb{E}\!\left[f(Y) \mid \theta\right]
 & = &
-{\large \nabla}_{\theta} \int f(y)
+{\large \nabla}_{\!\theta} \int f(y)
             \cdot p_{Y \mid \Theta}(y \mid \theta)
        \, \textrm{d} y
 \\[4pt]
 & = &
 \int f(y)
-     \cdot \left( {\large \nabla}_{\theta} p_{Y \mid \Theta}(y \mid \theta) \right)
+     \cdot \left( {\large \nabla}_{\!\theta} \, p_{Y \mid \Theta}(y \mid \theta) \right)
 \, \textrm{d} y
 \\[4pt]
 & = &
 \int f(y)
-     \cdot \left( {\large \nabla}_{\theta} \, \log p_{Y \mid \Theta}(y \mid \theta) \right)
+     \cdot \left( {\large \nabla}_{\!\theta} \log \, p_{Y \mid \Theta}(y \mid \theta) \right)
      \cdot p_{Y \mid \Theta}(y \mid \theta)
      \, \textrm{d} y
 \\[4pt]
 & = &
-\mathbb{E}\left[f(Y) \cdot {\large \nabla}_{\theta} \log p(Y \mid \theta) \mid \theta \right]
+\mathbb{E}\!\left[f(Y) \cdot {\large \nabla}_{\!\theta} \log \, p_{Y \mid
+\Theta}(Y \mid \theta) \, \Big| \, \theta \right]
 \\[4pt]
 & = &
 \lim_{M \rightarrow \infty}
 \frac{1}{M}
 \cdot \sum_{m = 1}^M  y^{(m)}
-                    \cdot {\large \nabla}_{\theta} \log p_{Y \mid \Theta}(y
+                    \cdot {\large \nabla}_{\!\theta} \log \, p_{Y \mid \Theta}(y
 		    \mid \theta)
 \\[4pt]
 & \approx &
 \frac{1}{M}
 \cdot \sum_{m = 1}^M y^{(m)}
-                    \cdot {\large \nabla}_{\theta} \log p_{Y \mid \Theta}(y
+                    \cdot {\large \nabla}_{\!\theta} \log \, p_{Y \mid \Theta}(y
 		    \mid \theta),
 \end{eqnarray*}
 where $y^{(m)} \sim p_{Y \mid \Theta}(y \mid \theta).$ Because $Y$ is
