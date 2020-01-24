@@ -11,6 +11,8 @@ $$
 $$
 where $p_Y(y)$ is the density function for $Y$.
 
+## Introduction to Monte Carlo Methods
+
 Suppose it possible to generate a sequence of random draws
 $$
 y^{(1)}, \ldots, y^{(m)}, \ldots \sim p_Y(y)
@@ -20,7 +22,7 @@ expectation may be reformulated as as the limit of the average
 value of the function applied to the draws,
 $$
 \mathbb{E}[f(y)]
-= 
+=
 \lim_{M \rightarrow \infty} \frac{1}{M} \sum_{m=1}^M f(y^{(m)}).
 $$
 Given finite computation time, an approximate result can be computed
@@ -30,68 +32,98 @@ $$
 \approx \frac{1}{M} \sum_{m=1}^M f(y^{(m)}).
 $$
 This is known as a Monte Carlo method, after the casino of that name
-in Monaco.
+in Monaco.  If the samples are independent or drawn from a geometrically
+ergodic Markov chain, the approximation will converge according to the
+central limit theorem at a rate of $\mathcal{O}(\sqrt{\frac{1}{M}}).$
 
-If the function $f(y)$ depends on other parameters $z$, e.g., $f(y) =
-g(y, z)$ and derivatives are required of the expectation, they can be
-moved inside the integral.  That is, taking the expetactation over random variable $Y$ and ddifferentiating with respect to $z$ yields
-$$
-\frac{\partial}{\partial z} \mathbb{E}[g(y, z)]
-= \mathbb{E}\left[ \frac{\partial}{\partial z} g(y, z) \right].
-$$
-The Monte Carlo approach is to approximate the derivative with
-$$
-\frac{\partial}{\partial z} \mathbb{E}[g(y, z)]
-\approx
-\frac{1}{M} \sum_{m=1}^M \frac{\partial}{\partial z} g(y^{(m)}, z).
-$$
+## Sensitivities of expectations
 
-The internal derivative $\frac{\partial}{\partial z}g(y^{(m)}, z)$ may
-be computed via automatic differentiation and the results summed.  No
-new rules of automatic differentiation are required, as the resulting
-term is a simple sum.
+Suppose that $p(y \mid \theta)$ is the distribution of a random
+variable $Y \in \mathbb{R}$ and there is some random quantity of
+interest $f(Y)$ whose expectation for some fixed parameter values
+$\theta$,
+$$
+\mathbb{E}[f(Y) \mid \theta]
+= \int f(y) \cdot p_{Y \mid \Theta}(y \mid \theta) \, \textrm{d}y,
+$$
+is of interest.
 
-## Max marginal optimization and sampling
+The derivative of this expectation with respect to the parameters
+$\theta$,
+$$
+\nabla \mathbb{E}\left[f(Y) \mid \theta\right],
+$$
+quantifies the rate of change in the expectaiton of $f(Y)$ as $\theta$
+changes.
 
-A common application for Monte Carlo integration is computing marginal
-densities, 
-$$
-p_{\Phi}(\phi) = \int_{\mathbb{R}} p_{\Phi,\Theta}(\phi, \theta) \, \textrm{d}\theta,
-$$
-for a given input value $\phi$.  A Monte Carlo approximation can be
-calculated as
-$$
-p_{\Phi}(\phi)
-\approx
-\frac{1}{M} \sum_{m = 1}^M
-  p_{\Phi, \Theta}(\phi, \theta^{(m)}),
-$$
-where for $m \in 1:M,$
-$$
-\theta^{(m)} \sim p_{\Theta \mid \Phi}(\theta \mid \phi).
-$$
+## The Score function
 
-Gradient-based samplers or optimizers when $\Phi$ is multivariate
-require the gradient $\nabla p_{\Phi}(\phi)$.  This can be
-calculated via Monte Carlo as
+The *score function* for the variable $Y$, which depends on parameters
+$\Theta$, is
 $$
-\nabla p_{\Phi}(\phi)
-\approx
-\frac{1}{M} \sum_{m=1}^M
-  \nabla p_{\Phi, \Theta}(\phi, \theta^{(m)}).
+\textrm{score}(\theta) = \nabla \log p_{Y \mid \Theta}(y \mid \theta).
+$$
+By the chain rule,
+$$
+\nabla \log p_{Y \mid \Theta}(y \mid \theta)
+= \frac{1}{\displaystyle p_{Y \mid \Theta}(y \mid \theta)}
+  \cdot \nabla p_{Y \mid \Theta}(y \mid \theta).
+$$
+Rearranging terms expresses the gradient of the density in terms of
+the score function and density,
+$$
+\nabla p_{Y \mid \Theta}(y \mid \theta)
+= p(y \mid \theta) \cdot \nabla \log p(x \mid \theta).
 $$
 
-For example, the maximum marginal likelihood estimate $\phi^*$ is
-defined as an optimization,
 
-$$
-\phi^* = \textrm{arg max}_{\phi} \ p_{\Phi}(\phi).
-$$
-Optimizing $p_{\Phi}$ with the marginalization computed
-by Markov chain Monte Carlo methods leads to an algorithm known as
-Markov chain Monte Carlo expectation maximization (MCMC-EM).
+## Monte Carlo gradients
 
-## Stochastic gradients
-
-These are all examples of stochastic gradient calculations.  
-
+The following derivation provides the basis for using Monte Carlo
+methods to calculate gradients.
+\begin{eqnarray*}
+\nabla_{\theta} \, \mathbb{E}[f(Y) \mid \theta]
+& = &
+{\large \nabla}_{\theta} \int f(y)
+            \cdot p_{Y \mid \Theta}(y \mid \theta)
+       \, \textrm{d} y
+\\[4pt]
+& = &
+\int f(y)
+     \cdot \left( {\large \nabla}_{\theta} p_{Y \mid \Theta}(y \mid \theta) \right)
+\, \textrm{d} y
+\\[4pt]
+& = &
+\int f(y)
+     \cdot \left( {\large \nabla}_{\theta} \, \log p_{Y \mid \Theta}(y \mid \theta) \right)
+     \cdot p_{Y \mid \Theta}(y \mid \theta)
+     \, \textrm{d} y
+\\[4pt]
+& = &
+\mathbb{E}\left[f(Y) \cdot {\large \nabla}_{\theta} \log p(Y \mid \theta) \mid \theta \right]
+\\[4pt]
+& = &
+\lim_{M \rightarrow \infty}
+\frac{1}{M}
+\cdot \sum_{m = 1}^M  y^{(m)}
+                    \cdot {\large \nabla}_{\theta} \log p_{Y \mid \Theta}(y
+		    \mid \theta)
+\\[4pt]
+& \approx &
+\frac{1}{M}
+\cdot \sum_{m = 1}^M y^{(m)}
+                    \cdot {\large \nabla}_{\theta} \log p_{Y \mid \Theta}(y
+		    \mid \theta),
+\end{eqnarray*}
+where $y^{(m)} \sim p_{Y \mid \Theta}(y \mid \theta).$ Because $Y$ is
+random and $\mathbb{E}\left[f(Y) \mid \theta\right]$ is a conditional
+expectation, the gradient is taken with respect to $\theta.$ The first
+line follows from the the definition of expectations.  The second step
+uses the dominated convergence theorem to distribute the gradient into
+the integral (past the constant $f(y)$).  The third step uses the
+score function derivation of the gradient of the density.  The fourth
+step is again the definiton of an expectation, where again $\theta$ is
+fixed.  The penultimate step involves the fundamental rule of Monte
+Carlo integration, assuming $y^{(m)} \sim p_{Y \mid \Theta}(y \mid
+\theta).$ The final step is the approximation resulting from using
+only finitely many draws.
