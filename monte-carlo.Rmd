@@ -4,9 +4,9 @@ Monte Carlo methods are used to compute high-dimensional integrals
 corresponding to expectations.  For example, if $Y \in \mathbb{R}$ is
 a real-valued random variable and $f:\mathbb{R} \rightarrow
 \mathbb{R}$ is a real-valued function, then the expectation of the
-function applied to the random variable is
+function applied to the random variable $Y$ is
 $$
-\mathbb{E}[f(y)]
+\mathbb{E}[f(Y)]
 = \int_{\mathbb{R}} f(y) \cdot p_Y(y) \, \textrm{d} y,
 $$
 where $p_Y(y)$ is the density function for $Y$.
@@ -56,7 +56,129 @@ $$
 quantifies the rate of change in the expectaiton of $f(Y)$ as $\theta$
 changes.
 
-## The Score function
+
+## The change-of-variables approach
+
+In simple cases, the expectation can be expressed as $\mathbb{E}[f(Y,
+\theta)]$ with gradients computed as
+\begin{eqnarray*}
+\nabla_{\theta} \, \mathbb{E}[f(Y, \theta)]
+& = &
+\nabla_{\theta} \int f(y, \theta) \cdot p(y) \textrm{d}y
+\\[4pt]
+& = &
+\int \left( \nabla_{\theta} f(y, \theta) \right)
+     \cdot p(y)
+\textrm{d}y
+\\[4pt]
+& \approx &
+\frac{1}{M} \cdot
+\sum_{m = 1}^M
+\nabla_{\theta} f(y^{(m)}, \theta) \qquad \textrm{where} \ y^{(m)} \sim
+p_Z(z).
+\end{eqnarray*}
+
+This is particularly useful when it is possible to express $Y$ using a
+change of variables parameterized by $\theta$ from a simpler random
+variable $Z$.  More specifically, suppose $Y = g(Z, \theta)$ for a smooth
+function of $\theta$ and that it is easy to draw
+$$
+z^{(m)} \sim p_{Z}(z).
+$$
+Given the easy to simulate variable $Z$ and smooth function $Y = g(Z, \theta),$
+$$
+\mathbb{E}[f(Y)]
+=
+\mathbb{E}[f(g(Z, \theta))].
+$$
+Gradients follow from the chain rule,
+\begin{eqnarray*}
+\nabla_{\theta} \mathbb{E}[f(g(Z, \theta))].
+& = &
+\nabla_{\theta}
+\int f(g(z, \theta)) \cdot p(\theta)
+\, \textrm{d}z
+\\[4pt]
+& = &
+\int \left( \nabla_{\theta} f(g(z, \theta)) \right) \cdot p(\theta)
+\, \textrm{d}z
+\\[4pt]
+& = &
+\int f'(g(z, \theta))
+     \cdot \left( \nabla_{\theta} \, g(z, \theta) \right)
+     \cdot p(\theta)
+\, \textrm{d}z
+\\[4pt]
+& \approx &
+\frac{1}{M}
+\cdot \sum_{m = 1}^M
+f'(g(z^{(m)}, \theta)) \cdot \nabla_{\theta} g(z^{(m)}, \theta)
+\qquad \textrm{where} \ z^{(m)} \sim p_Z(z)
+\end{eqnarray*}
+
+
+## Example: expecations of functions of multivariate normal variates
+For example, suppose $Y \sim \textrm{normal}(\mu, \Sigma)$ and the
+target expectation is $\mathbb{E}[f(Y) \mid \mu, \Sigma].$  A change of variables
+approach to calculating the expectation draws a standard normal
+variate $Z \sim \textrm{normal}(0, \textrm{I}),$ where $\textrm{I}$ is
+the identity matrix, then transforms it to $Y = g(Z, \mu, \Sigma),$
+where $g$ is the smooth function
+$$
+g(z, \mu, \Sigma) = \mu + \textrm{cholesky}(\Sigma) \cdot z.
+$$
+The Cholesky decomposition is defined so that
+$\textrm{cholesky}(\Sigma) = L_{\Sigma}$ is the unique lower
+triangular matrix satisfying
+$$
+\Sigma = L_{\Sigma} \cdot L_{\Sigma}^{\top}.
+$$
+Now if $z \sim \textrm{normal}(0, \textrm{I})$ and
+$y = g(z, \mu, \Sigma) = \mu + L_{\Sigma} \cdot z,$ then
+$z \sim \textrm{normal}(\mu, \Sigma).$
+
+The gradient of the target expectation can be defined by change of
+variables,
+\begin{eqnarray*}
+\nabla_{\mu, \Sigma} \, \mathbb{E}[f(Y) \mid \mu, \Sigma]
+& = &
+\nabla_{\mu, \Sigma}
+\int f(y) \cdot \textrm{normal}(y \mid \mu, \Sigma)
+\, \textrm{d}y.
+\\[4pt]
+& = &
+\nabla_{\mu, \Sigma}
+\int f(g(z, \mu, \Sigma))
+     \cdot \textrm{normal}(z \mid 0, 1)
+\, \textrm{d}{z}
+\\[4pt]
+& = &
+\nabla_{\mu, \Sigma}
+\int f(g(z, \mu, \Sigma))
+     \cdot \textrm{normal}(z \mid 0, 1)
+\, \textrm{d}{z}
+\\[4pt]
+& = &
+\int \left( \nabla_{\mu, \Sigma} \,
+            f(g(z, \mu, \Sigma)) \right)
+     \cdot \textrm{normal}(z \mid 0, 1)
+\, \textrm{d}z
+\\[4pt]
+& \approx &
+\frac{1}{M} \cdot \sum_{m = 1}^M
+\nabla_{\mu, \Sigma} \, f(g(z^{(m)}, \mu, \Sigma))
+\\[4pt]
+& \approx &
+\frac{1}{M} \cdot \sum_{m = 1}^M
+f'(g(z^{(m)}, \mu, \Sigma)) \cdot \nabla_{\mu, \Sigma} \, g(z^{(m)}, \mu, \Sigma),
+\end{eqnarray*}
+where $z^{(m)} \sim \textrm{normal}(0, \textrm{I})$.  Because $g$ is
+defined to be smooth and automatically differentiable, as long as the function
+$f(y)$ can be automatically differentiated, so can
+$\mathbb{E}[f(Y) \mid \mu, \Sigma] = \mathbb{E}[g(Z, \mu, \Sigma)].$
+
+
+## The score function approach
 
 The *score function* for the variable $Y$, which depends on parameters
 $\Theta$, is
@@ -75,9 +197,6 @@ $$
 \nabla p_{Y \mid \Theta}(y \mid \theta)
 = p(y \mid \theta) \cdot \nabla \log p(x \mid \theta).
 $$
-
-
-## Monte Carlo gradients
 
 The following derivation provides the basis for using Monte Carlo
 methods to calculate gradients.
@@ -123,13 +242,164 @@ line follows from the the definition of expectations.  The second step
 uses the dominated convergence theorem to distribute the gradient into
 the integral (past the constant $f(y)$).  The third step uses the
 score function derivation of the gradient of the density.  The fourth
-step is again the definiton of an expectation, where again $\theta$ is
+step is again the definition of an expectation, where again $\theta$ is
 fixed.  The penultimate step involves the fundamental rule of Monte
 Carlo integration, assuming $y^{(m)} \sim p_{Y \mid \Theta}(y \mid
 \theta).$ The final step is the approximation resulting from using
 only finitely many draws.
 
+## Example: Monte Carlo expectation maximization (MC EM)
+
+Given observed data $y$, unobserved (latent or missing) data $z$,
+parameters $\theta$, and total data likelihood function $p(y, z \mid
+\theta),$ the *maximum marginal likelihood estimate* is (where it exists),
+$$
+\textrm{argmax}_{\theta} \ p(y \mid \theta).
+$$
+The missing data $z$ is marginalized out of the total data likelihood
+to produce the likelihood of the observed data,
+$$
+p(y \mid \theta) = \int p(y, z \mid \theta) \, \textrm{d}z.
+$$
+The expectation maximization algorithm works iteratively by selecting
+an initial $\theta^{(1)}$ and then setting
+$$
+\theta^{(n + 1)}
+= \textrm{arg max}_{\theta} \ Q(\theta, \theta^{(n)}),
+$$
+where the function $Q$ is defined by
+$$
+Q(\theta, \theta^{(n)})
+= \int_Z
+  \log p(\theta \mid z, y)
+  \cdot p(z \mid \theta^{(n)}, y) \,
+\textrm{d}z.
+$$
+In order to find $\theta^{(n+1)}$ it is helpful to have gradients
+of the objective function $Q(\theta, \theta^{(n)})$ being optimized,
+\begin{eqnarray*}
+\nabla_{\theta} \, Q(\theta, \theta^{(n)})
+& = &
+\nabla_{\theta}
+\int_Z
+  \log p(\theta \mid z, y)
+  \cdot p(z \mid \theta^{(n)}, y) \,
+\textrm{d}z
+\\[4pt]
+& = &
+\int_Z
+  \left( \nabla_{\theta}  \log p(\theta \mid z, y) \right)
+  \cdot p(z \mid \theta^{(n)}, y) \,
+\textrm{d}z
+\\[4pt]
+& \approx &
+\frac{1}{M}
+\cdot \sum_{m=1}^M
+        \nabla_{\theta} \log p(\theta \mid z^{(m)}, y),
+\end{eqnarray*}
+where $z^{(m)} \sim p(z \mid \theta^{(n)}, y).$
+
+
+## Example: automatic differentiation variational inference (ADVI)
+
+In a Bayesian model, the focus is on the posterior distribution
+$p(\theta \mid y),$ where $y$ is observed data and $\theta$ are the
+model parameters.  Variational inference seeks to find a parametric
+distribution $p(\theta \mid \phi)$ with parameters $\phi$ that
+approximates the posterior $p(\theta \mid y)$.  The goodness of fit is
+measured by the *Kullback-Leibler (KL) divergence* from the approximating
+distribution to the true posterior.  The goal is to find the
+parameters $\phi$ that minimize this divergence,
+$$
+\hat{\phi}
+=
+\textrm{arg min}_{\phi}
+\ \textrm{KL}\!\left[p(\theta \mid \phi) \, \big|\big| \ p(\theta \mid y)\right].
+$$
+KL-divergence is defined by
+$$
+\textrm{KL}\!\left[\, p(\theta \mid \phi) \, \big|\big| \ p(\theta \mid y) \right]
+= \int_{\Theta}
+  p(\theta \mid \phi)
+  \cdot \log \frac{p(\theta \mid \phi)}
+                  {p(\theta \mid y)}
+  \, \textrm{d}\theta.
+$$
+Differentiating yields
+\begin{eqnarray*}
+\nabla_{\phi}
+\
+\textrm{KL}\!\left[\, p(\theta \mid \phi) \, \big|\big| \ p(\theta \mid y) \right]
+=
+\nabla_{\phi}
+\int_{\Theta}
+  p(\theta \mid \phi)
+  \cdot \log \frac{p(\theta \mid \phi)}
+                  {p(\theta \mid y)}
+\, \textrm{d}\theta.
+\end{eqnarray*}
+
+For *automatic differentiation variational inference* (ADVI), the
+approximating distribution is assumed to be multivariate normal
+with mean and covariance parameters $\phi = (\mu, \Sigma)$,
+$$
+p(\theta \mid \phi) = \textrm{normal}(\theta \mid \mu, \Sigma).
+$$
+Using the normal change of variables approach described above
+with $z \sim \textrm{normal}(0, \textrm{I})$ and
+$\theta = g(z, \mu, \Sigma) = \mu + \textrm{cholesky}(\Sigma) \cdot
+z,$ the gradient may be calculated by Monte Carlo methods as
+\begin{eqnarray*}
+\nabla_{\phi}
+\
+\textrm{KL}\!\left[\, p(\theta \mid \phi) \, \big|\big| \ p(\theta \mid y) \right]
+& = &
+\nabla_{\mu, \Sigma}
+\int_{\Theta}
+  \textrm{normal}(\theta \mid \mu, \Sigma)
+  \cdot \log \frac{\textrm{normal}(\theta \mid \mu, \Sigma)}
+                  {p(\theta \mid y)}
+\, \textrm{d}\theta
+\\[4pt]
+& = &
+\nabla_{\mu, \Sigma}
+\int_{\Theta}
+  \textrm{normal}(z \mid 0, 1)
+  \cdot \log \frac{\textrm{normal}(g(z, \mu, \Sigma) \mid \mu, \Sigma)}
+                  {p(g(z, \mu, \Sigma) \mid y)}
+\, \textrm{d}z
+\\[4pt]
+& = &
+\int_{\Theta}
+  \textrm{normal}(z \mid 0, 1)
+  \cdot \nabla_{\mu, \Sigma}
+         \log \frac{\textrm{normal}(g(z, \mu, \Sigma) \mid \mu, \Sigma)}
+                   {p(g(z, \mu, \Sigma) \mid y)}
+\, \textrm{d}z
+\\[4pt]
+& \approx &
+\frac{1}{M} \cdot \sum_{m = 1}^M
+\nabla_{\mu, \Sigma}
+         \log \frac{\textrm{normal}(g(z^{(m)}, \mu, \Sigma) \mid \mu, \Sigma)}
+                   {p(g(z^{(m)}, \mu, \Sigma) \mid y)},
+\end{eqnarray*}
+where the $z^{(m)} \sim \textrm{normal}(0, \textrm{I}).$  Because the
+function $g$ was constructed to be smooth, the derivative of the
+expectation can be calculated using automatic differentiation as long
+as the log posterior density function $\log p(\theta \mid y)$ can be automatically
+differentiated.
+
+This brute-force derivation ignores the fact that $\mathbb{E}[\log
+\textrm{normal}(\Theta \mid \mu, \Sigma) \mid \mu, \Sigma]$ is the
+entropy of a normally distributed random variable $\Theta \sim
+\textrm{normal}(\mu, \Sigma)$, the gradient of which is available in
+closed form.
+
+
 ## References
 
-[@mohamed:2019] is a thorough reference to using Monte Carlo gradients in probabilistic
-algorithms.
+[@mohamed:2019] is a thorough reference to using Monte Carlo gradients
+in statistical and machine-learning algorithms. [@wei:1990] provides a
+concise overview of gradients in the Monte Carlo EM
+algorithm. [@kucukelbir:2017] introduces automatic differentiation
+variational inference.
