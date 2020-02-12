@@ -1,0 +1,158 @@
+# Generalized Linear Models
+
+Generalized linear models are a form of regression where a linear
+function of predictors is transformed to an appropriate domain and
+then an appropriate sampling distribution is used.  For example,
+logistic regression involves a logistic link function that transforms
+values in $(0, 1)$ to $\mathbb{R}$ combined with a Bernoulli sampling
+distribution.  Traditional linear regression uses the identity
+function as a transform and a normal sampling distribution.
+
+## Linear predictors and regression coefficients
+
+In all of the generalized linear models, there will be $N$ observed
+outcomes $y = y_1, \ldots, y_N,$ the range of which will vary among
+the generalized linear models.
+
+In all of the models, there will be an $N \times K$ data matrix $x$,
+where each row vector $x_{n, 1:K} \in \mathbb{R}^K$ consists of predictors
+for outcome $y_n.$
+
+In all of the models, there will be parameters for an intercept
+$\alpha \in \mathbb{R}$ and regression coefficients $\beta \in
+\mathbb{R}^K$.  The linear predictor for a generalized linear model
+for item $y_n$ is
+$$
+\alpha + x_n \cdot \beta
+= \alpha = \sum_{k = 1}^K x_{n, k} \cdot \beta_k.
+$$
+Each generalized linear model will then transform this linear
+predictor and provide a corresponding sampling distribution, which may
+include additional parameters.
+
+## Logistic regression
+
+Logistic regression involves binary data $y_n \in \{ 0, 1 \},$ a
+logit link function (hence the name), and a Bernoulli sampling
+distribution.
+
+The logit function $\textrm{logit}:(0, 1) \rightarrow (-\infty,
+\infty)$ maps a probability to its log odds, that is, the logarithm of
+the odds it represents,
+$$
+\textrm{logit}(p) = \log \frac{p}{1 - p}.
+$$
+
+The inverse of the logit link function, $\textrm{logit}^{-1}:(-\infty,
+\infty) \rightarrow (0, 1),$ maps real numbers back to probabilities
+by
+$$
+\textrm{logit}^{-1}(a) = \frac{1}{1 = \exp(-a)}.
+$$
+The inverse logit function is a particular form of S-shaped, or
+sigmoid function.^[Other popular sigmoid functions in statistical
+applications include the hyperbolic tangent function
+$\textrm{tanh}:\mathbb{R} \rightarrow (-1, 1)$ and the inverse
+standard normal cumulative distribution function,
+$\Phi^{-1}:\mathbb{R} \rightarrow (0, 1).$]
+
+The Bernoulli sampling distribution is defined for $u \in \{ 0, 1 \}$
+and $\theta \in (0, 1)$ by
+$$
+\textrm{bernoulli}(u \mid \theta)
+=
+\begin{cases}
+\theta & \textrm{if} \ u = 1
+\\[4pt]
+1 - \theta & \textrm{if} \ u = 0.
+\end{cases}
+$$
+
+The logistic regression probability mass function is defined for
+$y \in \{ 0, 1 \}^N,$
+$x \in \mathbb{R}^{N \times K},$ $\alpha \in \mathbb{R},$
+and $\beta \in \mathbb{R}^K$ by
+$$
+p(y \mid x, \alpha, \beta)
+= \prod_{n = 1}^N
+\textrm{bernoulli}(y_n \mid
+  \textrm{logit}^{-1}(\alpha + x_n \cdot \beta)
+).
+$$
+
+To avoid underflow to zero, it is necessary to work on the log scale,
+where
+$$
+\log p(y \mid x, \alpha, \beta)\log p(y \mid x, \alpha, \beta)
+= \sum_{n = 1}^N \log
+\textrm{bernoulli}(y_n \mid
+  \textrm{logit}^{-1}(\alpha + x_n \cdot \beta)
+).
+$$
+
+For logistic regression (and other generalized linear
+models), the inverse link function applied to the linear predictor
+produces the expected value,
+$$
+\widehat{y}_n = \textrm{logit}^{-1}(\alpha + x_n \cdot \beta)
+$$
+
+The derivatives work out very neatly for logistic regression.  The
+inverse logit function has a derivative that can be expressed neatly
+in terms of the value,
+$$
+\frac{\textrm{d}}{\textrm{d} u}
+\textrm{logit}^{-1}(u)
+= \textrm{logit}^{-1}(u) \cdot (1 - \textrm{logit}^{-1}(u))
+$$
+Thus if $y = \textrm{logit}^{-1}(u),$ then $\frac{\textrm{d}}{\textrm{d}
+u} y = y \cdot (1 - y).$
+
+The next step is pushing this through the Bernoulli pmf, which is
+$$
+\frac{\partial}{\partial \theta}
+\textrm{bernoulli}(u \mid \theta)
+=
+\begin{cases}
+1 & \mbox{if} \ u = 1
+\\[2pt]
+-1 & \mbox{if} \ u = 0.
+\end{cases}
+$$
+Taking the derivative of the logarithm can then be worked out as
+$$
+\frac{\partial}{\partial \theta}
+\log \textrm{bernoulli}(u \mid \theta)
+=
+\begin{cases}
+\frac{1}{\theta} & \mbox{if} \ u = 1
+\\[2pt]
+-\frac{1}{1 - \theta} & \mbox{if} \ u = 0.
+\end{cases}
+$$
+
+Continuing to the full logistic regression log density,
+\begin{eqnarray*}
+\frac{\partial}{\partial \alpha} \log p(y \mid x, \alpha, \beta)
+& = &
+\sum_{n = 1}^N
+\frac{\partial}{\partial \alpha}
+\log \textrm{bernoulli}(y_n
+               \mid \textrm{logit}^{-1}(\alpha + x_n \cdot \beta))
+\\[4pt]
+& = &
+\sum_{n = 1}^N (y_n - \widehat{y}_n)
+\end{eqnarray*}
+
+Derivatives with respect to the regression coefficients are just as simple,
+$$
+\frac{\partial}{\partial \beta} \log p(y \mid x, \alpha, \beta)
+=
+\sum_{n = 1}^N x_n \cdot (y_n - \widehat{y}_n),
+$$
+or coefficient-wise,
+$$
+\frac{\partial}{\partial \beta_k} \log p(y \mid x, \alpha, \beta)
+=
+\sum_{n = 1}^N x_{n, k} \cdot (y_n - \widehat{y}_n).
+$$

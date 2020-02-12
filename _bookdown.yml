@@ -21,6 +21,7 @@ rmd_files: [
   "complex.Rmd",
   "integration.Rmd",
   "transforms.Rmd",
+  "generalized-linear-models.Rmd",
   "monte-carlo.Rmd",
 
 #  "bibliography.Rmd",
