@@ -57,3 +57,282 @@ $$
 \qquad
 \bar{b} {+=} -\bar{c}
 $$
+
+## Multiplication
+
+$$
+c = a\cdot b
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = b
+\qquad
+\frac{\partial}{\partial b} c = a
+$$
+
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a}\cdot b + \dot{b}\cdot a
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a}\ {+=} \ \bar{c}\cdot b
+\qquad
+\bar{b}\ {+=} \ \bar{c}\cdot a
+$$
+
+## Division
+
+$$
+c = \frac{a}{b}
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{b}
+\qquad
+\frac{\partial}{\partial b} c = -\frac{a}{b^2}
+$$
+
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{b}-\frac{a\cdot\dot{b}}{b^2}
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a}\ {+=} \ \frac{\bar{c}}{b}
+\qquad
+\bar{b}\ {+=} \ -\frac{\bar{c}\cdot a}{b^2}
+$$
+
+## Exponent
+
+$$
+c = e^a
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = e^a
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a}\cdot e^a
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a}\ {+=} \ \bar{c}\cdot e^a
+$$
+
+## Logarithm (base e)
+
+$$
+c = \log(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{a}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c}=\frac{\dot{a}}{a}
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a}\ {+=} \ \frac{\bar{c}}{a}
+$$
+
+## Power
+
+$$
+c=a^b
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c  = b\cdot a^{b-1}
+\qquad
+\frac{\partial}{\partial b} c  = \log(a)\cdot a^b
+$$
+
+### Tangent {-}
+
+$$
+\dot{c}=\dot{a}\cdot b\cdot a^{b-1}+\dot{b}\log(a)\cdot a^b=\left(\dot{a}\frac{b}{a}+\dot{b}\log(a)\right)\cdot a^b
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ \bar{c}\cdot b\cdot a^{b-1}  
+\qquad 
+\bar{b} \ {+=} \ \bar{c}\cdot\log(a)\cdot a^b
+$$
+
+## Square
+
+$$
+c=a^2
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c  = 2a
+$$
+
+### Tangent {-}
+
+$$
+\dot{c}=\dot{a}\cdot 2a
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ \bar{c} \cdot 2a
+$$
+
+## Inverse
+
+$$
+c=\frac{1}{a}
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c  = -\frac{1}{a^2}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c}=-\frac{\dot{a}}{a^2}
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ -\frac{\bar{c}}{a^2}
+$$
+
+## Square root
+
+$$
+c=\sqrt{a}
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c  = -\frac{1}{2\sqrt{a}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = -\frac{\dot{a}}{2\sqrt{a}}
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ -\frac{\bar{c}}{2\sqrt{a}}
+$$
+
+
+## Cos
+
+$$
+c = \cos(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a}c=-\sin(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c}=-\dot{a}\cdot \sin(a)
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ -\bar{c}\cdot\sin(a)
+$$
+
+## Sin
+
+$$
+c = \sin(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a}c=\cos(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c}=\dot{a}\cdot \cos(a)
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ \bar{c}\cdot \cos(a)
+$$
+
+## Tan
+
+$$
+c = \tan(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a}c=\frac{1}{\cos^2(a)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c}=\frac{\dot{a}}{\cos^2(a)}
+$$
+
+### Adjoints {-}
+
+$$
+\bar{a} \ {+=} \ \frac{\bar{c}}{\cos^2(a)}
+$$
