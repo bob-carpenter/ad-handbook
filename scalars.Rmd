@@ -337,6 +337,79 @@ $$
 \overline{a} \ {+=} \ \frac{\overline{c}}{\cos^2(a)}
 $$
 
+## Arccos
+
+$$
+c = \arccos(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = - \frac{1}{\sqrt{1-a^2}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = - \frac{\dot{a}}{\sqrt{1-a^2}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ - \frac{\overline{c}}{\sqrt{1-a^2}}
+$$
+
+## Arcsin
+
+$$
+c = \arcsin(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\sqrt{1-a^2}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\sqrt{1-a^2}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{1-a^2}}
+$$
+
+## Arctan
+
+$$
+c = \arctan(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\sqrt{1+a^2}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\sqrt{1+a^2}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{1+a^2}}
+$$
+
+
 ## Cosh
 
 $$
