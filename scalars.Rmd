@@ -9,7 +9,7 @@ $$
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c  = 1
+\frac{\partial}{\partial a} c = 1
 \qquad
 \frac{\partial}{\partial b} c = 1
 $$
@@ -23,9 +23,9 @@ $$
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ \bar{c}
+ \overline{a} \ {+=} \ \overline{c}
 \qquad
-\bar{b} \ {+=} \ \bar{c}
+ \overline{b} \ {+=} \ \overline{c}
 $$
 
 
@@ -53,15 +53,15 @@ $$
 ### Adjoints {-}
 
 $$
-\bar{a} {+=} \bar{c}
+ \overline{a} {+=} \overline{c}
 \qquad
-\bar{b} {+=} -\bar{c}
+ \overline{b} {+=} - \overline{c}
 $$
 
 ## Multiplication
 
 $$
-c = a\cdot b
+c = a \cdot b
 $$
 
 ### Derivatives {-}
@@ -76,15 +76,15 @@ $$
 ### Tangent {-}
 
 $$
-\dot{c} = \dot{a}\cdot b + \dot{b}\cdot a
+\dot{c} = \dot{a} \cdot b + \dot{b} \cdot a
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a}\ {+=} \ \bar{c}\cdot b
+ \overline{a} \ {+=} \ \overline{c} \cdot b
 \qquad
-\bar{b}\ {+=} \ \bar{c}\cdot a
+ \overline{b} \ {+=} \ \overline{c} \cdot a
 $$
 
 ## Division
@@ -98,46 +98,46 @@ $$
 $$
 \frac{\partial}{\partial a} c = \frac{1}{b}
 \qquad
-\frac{\partial}{\partial b} c = -\frac{a}{b^2}
+\frac{\partial}{\partial b} c = - \frac{a}{b^2}
 $$
 
 
 ### Tangent {-}
 
 $$
-\dot{c} = \frac{\dot{a}}{b}-\frac{a\cdot\dot{b}}{b^2}
+\dot{c} = \frac{\dot{a}}{b} - \frac{a \cdot \dot{b}}{b^2}
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a}\ {+=} \ \frac{\bar{c}}{b}
+\overline{a} \ {+=} \ \frac{\overline{c}}{b}
 \qquad
-\bar{b}\ {+=} \ -\frac{\bar{c}\cdot a}{b^2}
+\overline{b} \ {+=} \ - \frac{\overline{c} \cdot a}{b^2}
 $$
 
-## Exponent
+## Exponential
 
 $$
-c = e^a
+c = \exp(a)
 $$
 
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c = e^a
+\frac{\partial}{\partial a} c = \exp(a)
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c} = \dot{a}\cdot e^a
+\dot{c} = \dot{a} \cdot \exp(a)
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a}\ {+=} \ \bar{c}\cdot e^a
+\overline{a} \ {+=} \ \overline{c} \cdot \exp(a)
 $$
 
 ## Logarithm (base e)
@@ -155,113 +155,113 @@ $$
 ### Tangent {-}
 
 $$
-\dot{c}=\frac{\dot{a}}{a}
+\dot{c} = \frac{\dot{a}}{a}
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a}\ {+=} \ \frac{\bar{c}}{a}
+\overline{a} \ {+=} \ \frac{\overline{c}}{a}
 $$
 
 ## Power
 
 $$
-c=a^b
+c = a^b
 $$
 
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c  = b\cdot a^{b-1}
+\frac{\partial}{\partial a} c = b \cdot a^{b-1}
 \qquad
-\frac{\partial}{\partial b} c  = \log(a)\cdot a^b
+\frac{\partial}{\partial b} c = \log(a) \cdot a^b
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c}=\dot{a}\cdot b\cdot a^{b-1}+\dot{b}\log(a)\cdot a^b=\left(\dot{a}\frac{b}{a}+\dot{b}\log(a)\right)\cdot a^b
+\dot{c} = \dot{a} \cdot b \cdot a^{b-1} + \dot{b} \log(a) \cdot a^b = \left( \dot{a} \frac{b}{a} + \dot{b} \log(a) \right) \cdot a^b
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ \bar{c}\cdot b\cdot a^{b-1}  
+\overline{a} \ {+=} \ \overline{c} \cdot b \cdot a^{b-1} 
 \qquad 
-\bar{b} \ {+=} \ \bar{c}\cdot\log(a)\cdot a^b
+\overline{b} \ {+=} \ \overline{c} \cdot \log(a) \cdot a^b
 $$
 
 ## Square
 
 $$
-c=a^2
+c = a^2
 $$
 
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c  = 2a
+\frac{\partial}{\partial a} c = 2a
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c}=\dot{a}\cdot 2a
+\dot{c} = \dot{a} \cdot 2a
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ \bar{c} \cdot 2a
+\overline{a} \ {+=} \ \overline{c} \cdot 2a
 $$
 
 ## Inverse
 
 $$
-c=\frac{1}{a}
+c = \frac{1}{a}
 $$
 
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c  = -\frac{1}{a^2}
+\frac{\partial}{\partial a} c = - \frac{1}{a^2}
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c}=-\frac{\dot{a}}{a^2}
+\dot{c} = - \frac{\dot{a}}{a^2}
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ -\frac{\bar{c}}{a^2}
+ \overline{a} \ {+=} \ - \frac{\overline{c}}{a^2}
 $$
 
 ## Square root
 
 $$
-c=\sqrt{a}
+c = \sqrt{a}
 $$
 
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c  = -\frac{1}{2\sqrt{a}}
+\frac{\partial}{\partial a} c = -\frac{1}{2 \sqrt{a}}
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c} = -\frac{\dot{a}}{2\sqrt{a}}
+\dot{c} = -\frac{\dot{a}}{2 \sqrt{a}}
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ -\frac{\bar{c}}{2\sqrt{a}}
+ \overline{a} \ {+=} \ -\frac{\overline{c}}{2 \sqrt{a}}
 $$
 
 
@@ -274,19 +274,19 @@ $$
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a}c=-\sin(a)
+\frac{\partial}{\partial a} c = - \sin(a)
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c}=-\dot{a}\cdot \sin(a)
+\dot{c} = - \dot{a} \cdot \sin(a)
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ -\bar{c}\cdot\sin(a)
+ \overline{a} \ {+=} \ - \overline{c} \cdot\sin(a)
 $$
 
 ## Sin
@@ -298,19 +298,19 @@ $$
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a}c=\cos(a)
+\frac{\partial}{\partial a} c = \cos(a)
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c}=\dot{a}\cdot \cos(a)
+\dot{c} = \dot{a} \cdot \cos(a)
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ \bar{c}\cdot \cos(a)
+\overline{a} \ {+=} \ \overline{c} \cdot \cos(a)
 $$
 
 ## Tan
@@ -322,17 +322,17 @@ $$
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a}c=\frac{1}{\cos^2(a)}
+\frac{\partial}{\partial a} c = \frac{1}{\cos^2(a)}
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c}=\frac{\dot{a}}{\cos^2(a)}
+\dot{c} = \frac{\dot{a}}{\cos^2(a)}
 $$
 
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ \frac{\bar{c}}{\cos^2(a)}
+\overline{a} \ {+=} \ \frac{\overline{c}}{\cos^2(a)}
 $$
