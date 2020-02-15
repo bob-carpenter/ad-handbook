@@ -286,7 +286,7 @@ $$
 ### Adjoints {-}
 
 $$
- \overline{a} \ {+=} \ - \overline{c} \cdot\sin(a)
+ \overline{a} \ {+=} \ - \overline{c} \cdot \sin(a)
 $$
 
 ## Sin
@@ -335,4 +335,76 @@ $$
 
 $$
 \overline{a} \ {+=} \ \frac{\overline{c}}{\cos^2(a)}
+$$
+
+## Cosh
+
+$$
+c = \cosh(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \sinh(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \sinh(a)
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \overline{c} \cdot \sinh(a)
+$$
+
+## Sinh
+
+$$
+c = \sinh(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \cosh(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \cosh(a)
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot \cosh(a)
+$$
+
+## Tanh
+
+$$
+c = \tanh(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\cosh^2(a)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\cosh^2(a)}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{\cosh^2(a)}
 $$
