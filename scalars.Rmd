@@ -394,19 +394,19 @@ $$
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c = \frac{1}{\sqrt{1+a^2}}
+\frac{\partial}{\partial a} c = \frac{1}{1+a^2}
 $$
 
 ### Tangent {-}
 
 $$
-\dot{c} = \frac{\dot{a}}{\sqrt{1+a^2}}
+\dot{c} = \frac{\dot{a}}{1+a^2}
 $$
 
 ### Adjoints {-}
 
 $$
- \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{1+a^2}}
+ \overline{a} \ {+=} \ \frac{\overline{c}}{1+a^2}
 $$
 
 
@@ -481,3 +481,76 @@ $$
 $$
 \overline{a} \ {+=} \ \frac{\overline{c}}{\cosh^2(a)}
 $$
+
+## Arccosh
+
+$$
+c = \text{arccosh}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\sqrt{a^2-1}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\sqrt{a^2-1}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{a^2-1}}
+$$
+
+## Arcsinh
+
+$$
+c = \text{arcsinh}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\sqrt{1+a^2}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\sqrt{1+a^2}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{1+a^2}}
+$$
+
+## Arctanh
+
+$$
+c = \text{arctanh}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{1-a^2}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{1-a^2}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{1-a^2}
+$$
+
