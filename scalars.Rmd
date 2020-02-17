@@ -105,7 +105,7 @@ $$
 ### Tangent {-}
 
 $$
-\dot{c} = \frac{\dot{a}}{b} - \frac{a \cdot \dot{b}}{b^2}
+\dot{c} = \frac{\dot{a}}{b} - \frac{\dot{b} \cdot a}{b^2}
 $$
 
 ### Adjoints {-}
@@ -140,6 +140,31 @@ $$
 \overline{a} \ {+=} \ \overline{c} \cdot \exp(a)
 $$
 
+## Exponential (base 2)
+
+$$
+c = 2^a
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c =  \log(a) \cdot 2^a
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \log(a) \cdot 2^a
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot \log(a) \cdot 2^a
+$$
+
+
 ## Logarithm (base e)
 
 $$
@@ -164,6 +189,54 @@ $$
 \overline{a} \ {+=} \ \frac{\overline{c}}{a}
 $$
 
+## Logarithm (base 2)
+
+$$
+c = \log_2(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{a \cdot \log(2)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{a \cdot \log(2)}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{a \cdot \log(2)}
+$$
+
+## Logarithm (base 10)
+
+$$
+c = \log_{10}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{a \cdot \log(10)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{a \cdot \log(10)}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{a \cdot \log(10)}
+$$
+
 ## Power
 
 $$
@@ -181,7 +254,7 @@ $$
 ### Tangent {-}
 
 $$
-\dot{c} = \dot{a} \cdot b \cdot a^{b-1} + \dot{b} \log(a) \cdot a^b = \left( \dot{a} \frac{b}{a} + \dot{b} \log(a) \right) \cdot a^b
+\dot{c} = \dot{a} \cdot b \cdot a^{b-1} + \dot{b} \cdot \log(a) \cdot a^b = \left( \dot{a} \cdot \frac{b}{a} + \dot{b} \cdot \log(a) \right) \cdot a^b
 $$
 
 ### Adjoints {-}
@@ -216,30 +289,6 @@ $$
 \overline{a} \ {+=} \ \overline{c} \cdot 2a
 $$
 
-## Inverse
-
-$$
-c = \frac{1}{a}
-$$
-
-### Derivatives {-}
-
-$$
-\frac{\partial}{\partial a} c = - \frac{1}{a^2}
-$$
-
-### Tangent {-}
-
-$$
-\dot{c} = - \frac{\dot{a}}{a^2}
-$$
-
-### Adjoints {-}
-
-$$
- \overline{a} \ {+=} \ - \frac{\overline{c}}{a^2}
-$$
-
 ## Square root
 
 $$
@@ -262,6 +311,31 @@ $$
 
 $$
  \overline{a} \ {+=} \ -\frac{\overline{c}}{2 \sqrt{a}}
+$$
+
+
+## Inverse
+
+$$
+c = \frac{1}{a}
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = - \frac{1}{a^2}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = - \frac{\dot{a}}{a^2}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ - \frac{\overline{c}}{a^2}
 $$
 
 
