@@ -22,11 +22,6 @@ knitr::opts_chunk$set(
   fig.show = "hold",
   out.width = "90%"
 )
-library(MASS)
-library(reshape)
-library(rstan)
-rstan_options(auto_write = FALSE)
-options(mc.cores = 1)
 library(tufte)
 
 
