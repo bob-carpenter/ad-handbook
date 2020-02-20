@@ -46,13 +46,18 @@ terms of use for GitHub.
 The following system package must be installed:
 
 * pandoc
+* pandoc-citeproc
+
+See the [instructions for installing pandoc](https://pandoc.org/installing.html).
 
 The following R packages must be installed in order to build the book:
 
 * bookdown
 * tufte
 * reshape
-
+* ggplot2
+* gridExtra
+* formatR
 
 They can be installed using, e.g.,
 
