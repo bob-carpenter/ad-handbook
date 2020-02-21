@@ -9,7 +9,7 @@ $$
 ### Derivatives {-}
 
 $$
-\frac{\partial}{\partial a} c  = 1
+\frac{\partial}{\partial a} c = 1
 \qquad
 \frac{\partial}{\partial b} c = 1
 $$
@@ -23,9 +23,9 @@ $$
 ### Adjoints {-}
 
 $$
-\bar{a} \ {+=} \ \bar{c}
+ \overline{a} \ {+=} \ \overline{c}
 \qquad
-\bar{b} \ {+=} \ \bar{c}
+ \overline{b} \ {+=} \ \overline{c}
 $$
 
 
@@ -53,7 +53,578 @@ $$
 ### Adjoints {-}
 
 $$
-\bar{a} {+=} \bar{c}
+ \overline{a} {+=} \overline{c}
 \qquad
-\bar{b} {+=} -\bar{c}
+ \overline{b} {+=} - \overline{c}
 $$
+
+## Multiplication
+
+$$
+c = a \cdot b
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = b
+\qquad
+\frac{\partial}{\partial b} c = a
+$$
+
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot b + \dot{b} \cdot a
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \overline{c} \cdot b
+\qquad
+ \overline{b} \ {+=} \ \overline{c} \cdot a
+$$
+
+## Division
+
+$$
+c = \frac{a}{b}
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{b}
+\qquad
+\frac{\partial}{\partial b} c = - \frac{a}{b^2}
+$$
+
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{b} - \frac{\dot{b} \cdot a}{b^2}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{b}
+\qquad
+\overline{b} \ {+=} \ - \frac{\overline{c} \cdot a}{b^2}
+$$
+
+## Exponential
+
+$$
+c = \exp(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \exp(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \exp(a)
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot \exp(a)
+$$
+
+## Exponential (base 2)
+
+$$
+c = 2^a
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c =  \log(a) \cdot 2^a
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \log(a) \cdot 2^a
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot \log(a) \cdot 2^a
+$$
+
+
+## Logarithm (base e)
+
+$$
+c = \log(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{a}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{a}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{a}
+$$
+
+## Logarithm (base 2)
+
+$$
+c = \log_2(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{a \cdot \log(2)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{a \cdot \log(2)}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{a \cdot \log(2)}
+$$
+
+## Logarithm (base 10)
+
+$$
+c = \log_{10}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{a \cdot \log(10)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{a \cdot \log(10)}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{a \cdot \log(10)}
+$$
+
+## Power
+
+$$
+c = a^b
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = b \cdot a^{b-1}
+\qquad
+\frac{\partial}{\partial b} c = \log(a) \cdot a^b
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot b \cdot a^{b-1} + \dot{b} \cdot \log(a) \cdot a^b = \left( \dot{a} \cdot \frac{b}{a} + \dot{b} \cdot \log(a) \right) \cdot a^b
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot b \cdot a^{b-1} 
+\qquad 
+\overline{b} \ {+=} \ \overline{c} \cdot \log(a) \cdot a^b
+$$
+
+## Square
+
+$$
+c = a^2
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = 2a
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot 2a
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot 2a
+$$
+
+## Square root
+
+$$
+c = \sqrt{a}
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = -\frac{1}{2 \sqrt{a}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = -\frac{\dot{a}}{2 \sqrt{a}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ -\frac{\overline{c}}{2 \sqrt{a}}
+$$
+
+
+## Inverse
+
+$$
+c = \frac{1}{a}
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = - \frac{1}{a^2}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = - \frac{\dot{a}}{a^2}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ - \frac{\overline{c}}{a^2}
+$$
+
+
+## Cos
+
+$$
+c = \cos(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = - \sin(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = - \dot{a} \cdot \sin(a)
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ - \overline{c} \cdot \sin(a)
+$$
+
+## Sin
+
+$$
+c = \sin(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \cos(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \cos(a)
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot \cos(a)
+$$
+
+## Tan
+
+$$
+c = \tan(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\cos^2(a)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\cos^2(a)}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{\cos^2(a)}
+$$
+
+## Arccos
+
+$$
+c = \arccos(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = - \frac{1}{\sqrt{1-a^2}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = - \frac{\dot{a}}{\sqrt{1-a^2}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ - \frac{\overline{c}}{\sqrt{1-a^2}}
+$$
+
+## Arcsin
+
+$$
+c = \arcsin(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\sqrt{1-a^2}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\sqrt{1-a^2}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{1-a^2}}
+$$
+
+## Arctan
+
+$$
+c = \arctan(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{1+a^2}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{1+a^2}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{1+a^2}
+$$
+
+
+## Cosh
+
+$$
+c = \cosh(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \sinh(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \sinh(a)
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \overline{c} \cdot \sinh(a)
+$$
+
+## Sinh
+
+$$
+c = \sinh(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \cosh(a)
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \dot{a} \cdot \cosh(a)
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \overline{c} \cdot \cosh(a)
+$$
+
+## Tanh
+
+$$
+c = \tanh(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\cosh^2(a)}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\cosh^2(a)}
+$$
+
+### Adjoints {-}
+
+$$
+\overline{a} \ {+=} \ \frac{\overline{c}}{\cosh^2(a)}
+$$
+
+## Arccosh
+
+$$
+c = \text{arccosh}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\sqrt{a^2-1}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\sqrt{a^2-1}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{a^2-1}}
+$$
+
+## Arcsinh
+
+$$
+c = \text{arcsinh}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{\sqrt{1+a^2}}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{\sqrt{1+a^2}}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{\sqrt{1+a^2}}
+$$
+
+## Arctanh
+
+$$
+c = \text{arctanh}(a)
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial a} c = \frac{1}{1-a^2}
+$$
+
+### Tangent {-}
+
+$$
+\dot{c} = \frac{\dot{a}}{1-a^2}
+$$
+
+### Adjoints {-}
+
+$$
+ \overline{a} \ {+=} \ \frac{\overline{c}}{1-a^2}
+$$
+
