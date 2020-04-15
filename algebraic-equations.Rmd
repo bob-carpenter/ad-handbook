@@ -24,7 +24,7 @@ Then
 This chapter is mostly relevant to the case where we cannot evaluate $u$ analytically
 or by doing a matrix solve, which we would do if $f$ were a linear function of $u$.
 Rather, we compute $u$ using a numerical solver.
-The classic example for such a solver is the Newton-Rhapson method.
+The classic example for such a solver is the Newton-Raphson method.
 Most numerical solvers are based on iterative algorithms, 
 which start with an initial guess $u_0$, and update the guess until they find an
 acceptable (by some metric) solution.
@@ -65,7 +65,7 @@ We can derive the above result as follows:
 where we assume the requisite differentiation and inversion are possible.
 
 It remains to evaluate $\partial f / \partial u$ and $\partial f / \partial \psi$
-using automtic differentiation.
+using automatic differentiation.
 This approach, compared to the direct method, can be orders of magnitude faster.
 
 
@@ -80,14 +80,14 @@ that depends on $u$, and potentially also on $\psi$,
 Here, we chose $j$ to be a scalar, as would be the case when differentiating
 a probability density or an objective function.
 
-One of the key factors that makes automatic differentiation so successfull
-is that we do not explicitly construct the Jacobian matrices, incured by intermediate operations
+One of the key factors that makes automatic differentiation so successful
+is that we do not explicitly construct the Jacobian matrices, incurred by intermediate operations
 required to compute $j$.
-Rahter, we only sequentially compute cotangent-Jacobian products in reverse mode,
+Rather, we only sequentially compute cotangent-Jacobian products in reverse mode,
 or Jacobian-tangent products in forward mode.
 Applying this logic, we should aim to _not_ compute $\mathrm d u / \mathrm d \psi$ explicitly.
 
-This is where the _adjoint method_ comes into play. It was not originally developped
+This is where the _adjoint method_ comes into play. It was not originally developed
 for algebraic equations, but it's other applications are a bit more involved,
 so introducing it here has pedagogical value.
 The goal is to remove the explicit dependence on $\mathrm d u / \mathrm d \psi$.
