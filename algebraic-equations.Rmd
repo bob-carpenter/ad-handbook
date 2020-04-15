@@ -1,6 +1,6 @@
-# Algebraic equations
+# Nonlinear system of equations
 
-Algebraic equations take the form $f(x) = 0$.
+Nonlinear system of equations take the form $f(x) = 0$.
 The solution to such equations likely constitutes the simplest non-trivial example
 of an _implicit function_. With it as a motivating problem, we
 develop the principles and mechanisms needed to differentiate more sophisticated
@@ -38,7 +38,7 @@ Instead, we can exploit the structure of the problem to construct efficient
 differentiation algorithms.
 
 
-## The Implicit function theorem \ Tangent linear method?
+## The tangent linear method
 
 The _implicit function theorem_ states that under certain regularity conditions,
 we can express $u$ as a function of $\psi$, that is
@@ -74,7 +74,7 @@ using automatic differentiation.
 This approach, compared to the direct method, can be orders of magnitude faster.
 
 
-## The Adjoint method
+## The adjoint method
 
 For many applications, our goal is not to differentiate $u$, but a functional $j$
 that depends on $u$, and potentially also on $\psi$,
