@@ -49,7 +49,7 @@ we can express $u$ as a function of $\psi$, that is
 and furthermore
 \begin{equation*}
   \frac{\mathrm d u}{\mathrm d \psi} 
-    = - \left [ \frac{\partial f}{\partial u} \right]^{-1} \frac{\partial f}{\partial \psi} 
+    = -  \frac{\partial f}{\partial u}^{-1} \frac{\partial f}{\partial \psi} 
 \end{equation*}
 The derivatives here are short-handed for Jacobian matrices.
 The derivative exists if $f$ is differentiable with respect to $x$ and $\psi$
@@ -63,10 +63,11 @@ We can derive the above result as follows:
     + \frac{\partial f}{\partial u}\frac{\mathrm d u}{\mathrm d \psi} = 0 \\
   \iff & \frac{\partial f}{\partial u}\frac{\mathrm d u}{\mathrm d \psi} 
     = - \frac{\partial f}{\partial \psi}  \\
-  \iff & \frac{\mathrm d u}{\mathrm d \psi} = - \left [\frac{\partial f}{\partial u} \right]^{-1}
+  \iff & \frac{\mathrm d u}{\mathrm d \psi} = - \frac{\partial f}{\partial u}^{-1}
     \frac{\partial f}{\partial \psi}
 \end{align*}
 where we assume the requisite differentiation and inversion are possible.
+The linear system that is solved for $\frac{\mathrm d u}{\mathrm d \psi}$ is called the _tangent linear system_.
 
 It remains to evaluate $\partial f / \partial u$ and $\partial f / \partial \psi$
 using automatic differentiation.
@@ -78,11 +79,9 @@ This approach, compared to the direct method, can be orders of magnitude faster.
 For many applications, our goal is not to differentiate $u$, but a functional $j$
 that depends on $u$, and potentially also on $\psi$,
 \begin{eqnarray*}
-  j : & \mathbb R^n \times \mathbb R^p \to \mathbb R \\
-      & (u, \psi) \to j(u, \psi)
+  j : & \mathbb R^n \times \mathbb R^p \to \mathbb R^m \\
+      & (u, \psi) \mapsto j(u, \psi)
 \end{eqnarray*}
-Here, we chose $j$ to be a scalar, as would be the case when differentiating
-a probability density or an objective function.
 
 One of the key factors that makes automatic differentiation so successful
 is that we do not explicitly construct the Jacobian matrices, incurred by intermediate operations
@@ -98,8 +97,31 @@ The goal is to remove the explicit dependence on $\mathrm d u / \mathrm d \psi$.
 
 We start with
 \begin{equation*}
-  \frac{\mathrm d j}{\mathrm d \psi} = \frac{\partial j}{\partial \psi} 
-    + \frac{\partial j}{\partial u} \frac{\mathrm d u}{\mathrm d \psi}
+  \frac{\mathrm d j}{\mathrm d \psi} = \frac{\partial j}{\partial u} \frac{\mathrm d u}{\mathrm d \psi}
+  + \frac{\partial j}{\partial \psi}.
+\end{equation*}
+Then substitute the expression for $\frac{\mathrm d u}{\mathrm d \psi}$ from the previous section
+\begin{equation*}
+  \frac{\mathrm d j}{\mathrm d \psi} = - \frac{\partial j}{\partial u} \frac{\partial f}{\partial u}^{-1}
+    \frac{\partial f}{\partial \psi}
+  + \frac{\partial j}{\partial \psi}.
+\end{equation*}
+Take the adjoint (transpose) of $\frac{\mathrm d j}{\mathrm d \psi}$
+\begin{equation*}
+  \frac{\mathrm d j}{\mathrm d \psi}^{*} = - \frac{\partial f}{\partial \psi}^{*} \frac{\partial f}{\partial u}^{-*}
+    \frac{\partial j}{\partial u}^{*}
+  + \frac{\partial j}{\partial \psi}^{*}.
+\end{equation*}
+Define a new variable $\lambda$ as
+\begin{equation*}
+  \lambda = - \frac{\partial f}{\partial u}^{-*} \frac{\partial j}{\partial u}^{*}.
+\end{equation*}
+The linear system that is solved for $\lambda$ is called the _adjoint system_.
+Having the solution to the adjoint system \lambda, it remains to evaluate \frac{\mathrm d j}{\mathrm d \psi}^{*}
+with one additional matrix multiplication operation
+\begin{equation*}
+  \frac{\mathrm d j}{\mathrm d \psi}^{*} = - \frac{\partial f}{\partial \psi}^{*} \lambda
+  + \frac{\partial j}{\partial \psi}^{*}.
 \end{equation*}
 
 Consider now the _Lagrangian_,
