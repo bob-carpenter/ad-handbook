@@ -114,7 +114,7 @@ Take the adjoint (transpose) of $\frac{\mathrm d j}{\mathrm d \psi}$
 \end{equation*}
 Define a new variable $\lambda$ as
 \begin{equation*}
-  \lambda = - \frac{\partial f}{\partial u}^{-*} \frac{\partial j}{\partial u}^{*}.
+  \lambda = \frac{\partial f}{\partial u}^{-*} \frac{\partial j}{\partial u}^{*}.
 \end{equation*}
 The linear system that is solved for $\lambda$ is called the _adjoint system_.
 Having the solution to the adjoint system \lambda, it remains to evaluate \frac{\mathrm d j}{\mathrm d \psi}^{*}
@@ -167,4 +167,35 @@ and in the unifying approach it provides when studying implicit functions.
 
 ## Practical considerations
 
+One of the key factors that makes automatic differentiation so successful
+is that we do not explicitly construct the Jacobian matrices.
+Rather, we only sequentially compute cotangent-Jacobian products in reverse mode,
+or Jacobian-tangent products in forward mode.
+
+### Tangent linear equation and forward mode AD
+
+In forward mode given the tangent vector $\dot{\psi}$ we evaluate the Jacobian-tangent product
+\begin{equation*}
+  (\psi, \dot{\psi}) \mapsto \frac{\mathrm d u(\psi)}{\mathrm d \psi} \dot{\psi},
+\end{equation*}
+that is the solution to the following linear system
+\begin{equation*}
+  \frac{\partial f}{\partial u} \left(\frac{\mathrm d u(\psi)}{\mathrm d \psi} \dot{\psi} \right) =
+  - \frac{\partial f}{\partial \psi} \cdot \dot{psi}.
+\end{equation*}
+
+### Adjoint equation and reverse mode AD
+
+In reverse mode given the cotangent vector $\bar{\psi}$ we evaluate the Jacobian-transpose-vector product
+\begin{equation*}
+  (\psi, \bar{\psi}) \mapsto \frac{\mathrm d u(\psi)}{\mathrm d \psi}^{*} \bar{\psi},
+\end{equation*}
+that is evaluated as
+\begin{equation*}
+  \frac{\mathrm d u(\psi)}{\mathrm d \psi}^{*} \bar{\psi} = - \frac{\partial f}{\partial \psi}^{*} \cdot \lambda,
+\end{equation*}
+where $\lambda$ is the solution to the following linear system
+\begin{equation*}
+  \frac{\partial f}{\partial u}^{*} \lambda = \bar{psi}.
+\end{equation*}
 
