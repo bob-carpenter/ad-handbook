@@ -181,7 +181,7 @@ In forward mode given the tangent vector $\dot{\psi}$ we evaluate the Jacobian-t
 that is the solution to the following linear system
 \begin{equation*}
   \frac{\partial f}{\partial u} \left(\frac{\mathrm d u(\psi)}{\mathrm d \psi} \dot{\psi} \right) =
-  - \frac{\partial f}{\partial \psi} \cdot \dot{psi}.
+  - \frac{\partial f}{\partial \psi} \cdot \dot{\psi}.
 \end{equation*}
 
 ### Adjoint equation and reverse mode AD
@@ -196,6 +196,6 @@ that is evaluated as
 \end{equation*}
 where $\lambda$ is the solution to the following linear system
 \begin{equation*}
-  \frac{\partial f}{\partial u}^{*} \lambda = \bar{psi}.
+  \frac{\partial f}{\partial u}^{*} \lambda = \bar{\psi}.
 \end{equation*}
 
