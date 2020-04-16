@@ -10,7 +10,7 @@ and in differential equations.
 Formally, consider the function
 \begin{eqnarray*}
   f: & \mathbb R^n \times \mathbb R^p \rightarrow \mathbb R^n \\
-     & (x, \psi) \rightarrow f(x, \psi)
+     & (x, \psi) \mapsto f(x, \psi)
 \end{eqnarray*}
 Our goal is to find to find the value of $x$, such that $f = 0$,
 given a value of $\psi$ and to propagate sensitivities with respect to $\psi$
@@ -24,7 +24,7 @@ Then
 This chapter is mostly relevant to the case where we cannot evaluate $u$ analytically
 or by doing a matrix solve, which we would do if $f$ were a linear function of $u$.
 Rather, we compute $u$ using a numerical solver.
-The classic example for such a solver is the Newton-Rhapson method.
+The classic example for such a solver is the Newton-Raphson method.
 Most numerical solvers are based on iterative algorithms, 
 which start with an initial guess $u_0$, and update the guess until they find an
 acceptable (by some metric) solution.
@@ -41,8 +41,12 @@ differentiation algorithms.
 ## The Implicit function theorem
 
 The _implicit function theorem_ states that under certain regularity conditions,
-we can express $u$ as a function of $\psi$, that is $u = u(\psi)$ and
-furthermore
+we can express $u$ as a function of $\psi$, that is
+\begin{eqnarray*}
+  u: & \mathbb R^p \rightarrow \mathbb R^n \\
+     & \psi \mapsto u(\psi)
+\end{eqnarray*}
+and furthermore
 \begin{equation*}
   \frac{\mathrm d u}{\mathrm d \psi} 
     = - \left [ \frac{\partial f}{\partial u} \right]^{-1} \frac{\partial f}{\partial \psi} 
@@ -54,8 +58,8 @@ in the neighborhood of $x = u$, and if $\partial f / \partial x$ is invertible.
 We can derive the above result as follows:
 \begin{align*}
   & f(u, \psi) = 0  \\
-  \implies & \frac{\mathrm d f}{\mathrm d \psi}(u, \psi) = 0 \\
-  \iff & \frac{\partial f}{\partial \psi} 
+  \implies & \frac{\mathrm d f}{\mathrm d \psi}(u, \psi) = \frac{\mathrm d f}{\mathrm d \psi} 0 \\
+  \iff & \frac{\partial f}{\partial \psi} \frac{\mathrm d \psi}{\mathrm d \psi}
     + \frac{\partial f}{\partial u}\frac{\mathrm d u}{\mathrm d \psi} = 0 \\
   \iff & \frac{\partial f}{\partial u}\frac{\mathrm d u}{\mathrm d \psi} 
     = - \frac{\partial f}{\partial \psi}  \\
@@ -63,9 +67,10 @@ We can derive the above result as follows:
     \frac{\partial f}{\partial \psi}
 \end{align*}
 where we assume the requisite differentiation and inversion are possible.
+The linear system that is solved for $\frac{\mathrm d u}{\mathrm d \psi}$ is called the _tangent linear system_.
 
 It remains to evaluate $\partial f / \partial u$ and $\partial f / \partial \psi$
-using automtic differentiation.
+using automatic differentiation.
 This approach, compared to the direct method, can be orders of magnitude faster.
 
 
@@ -75,27 +80,50 @@ For many applications, our goal is not to differentiate $u$, but a functional $j
 that depends on $u$, and potentially also on $\psi$,
 \begin{eqnarray*}
   j : & \mathbb R^n \times \mathbb R^p \to \mathbb R \\
-      & (u, \psi) \to j(u, \psi)
+      & (u, \psi) \mapsto j(u, \psi)
 \end{eqnarray*}
 Here, we chose $j$ to be a scalar, as would be the case when differentiating
 a probability density or an objective function.
 
-One of the key factors that makes automatic differentiation so successfull
-is that we do not explicitly construct the Jacobian matrices, incured by intermediate operations
+One of the key factors that makes automatic differentiation so successful
+is that we do not explicitly construct the Jacobian matrices, incurred by intermediate operations
 required to compute $j$.
-Rahter, we only sequentially compute cotangent-Jacobian products in reverse mode,
+Rather, we only sequentially compute cotangent-Jacobian products in reverse mode,
 or Jacobian-tangent products in forward mode.
 Applying this logic, we should aim to _not_ compute $\mathrm d u / \mathrm d \psi$ explicitly.
 
-This is where the _adjoint method_ comes into play. It was not originally developped
+This is where the _adjoint method_ comes into play. It was not originally developed
 for algebraic equations, but it's other applications are a bit more involved,
 so introducing it here has pedagogical value.
 The goal is to remove the explicit dependence on $\mathrm d u / \mathrm d \psi$.
 
 We start with
 \begin{equation*}
-  \frac{\mathrm d j}{\mathrm d \psi} = \frac{\partial j}{\partial \psi} 
-    + \frac{\partial j}{\partial u} \frac{\mathrm d u}{\mathrm d \psi}
+  \frac{\mathrm d j}{\mathrm d \psi} = \frac{\partial j}{\partial u} \frac{\mathrm d u}{\mathrm d \psi}
+  + \frac{\partial j}{\partial \psi}.
+\end{equation*}
+Then substitute the expression for $\frac{\mathrm d u}{\mathrm d \psi}$ from the previous section
+\begin{equation*}
+  \frac{\mathrm d j}{\mathrm d \psi} = - \frac{\partial j}{\partial u} \frac{\partial f}{\partial u}^{-1}
+    \frac{\partial f}{\partial \psi}
+  + \frac{\partial j}{\partial \psi}.
+\end{equation*}
+Take the adjoint (transpose) of $\frac{\mathrm d j}{\mathrm d \psi}$
+\begin{equation*}
+  \frac{\mathrm d j}{\mathrm d \psi}^{*} = - \frac{\partial f}{\partial \psi}^{*} \frac{\partial f}{\partial u}^{-*}
+    \frac{\partial j}{\partial u}^{*}
+  + \frac{\partial j}{\partial \psi}^{*}.
+\end{equation*}
+Define a new variable $\lambda$ as
+\begin{equation*}
+  \lambda = \frac{\partial f}{\partial u}^{-*} \frac{\partial j}{\partial u}^{*}.
+\end{equation*}
+The linear system that is solved for $\lambda$ is called the _adjoint system_.
+Having the solution to the adjoint system \lambda, it remains to evaluate \frac{\mathrm d j}{\mathrm d \psi}^{*}
+with one additional matrix multiplication operation
+\begin{equation*}
+  \frac{\mathrm d j}{\mathrm d \psi}^{*} = - \frac{\partial f}{\partial \psi}^{*} \lambda
+  + \frac{\partial j}{\partial \psi}^{*}.
 \end{equation*}
 
 Consider now the _Lagrangian_,
@@ -139,6 +167,38 @@ Note that we could have obtained this result by using the implicit function theo
 The adjoint method however has merit in its ability to solve more complicated problems
 and in the unifying approach it provides when studying implicit functions.
 
+## Summary of results
+
+One of the key factors that makes automatic differentiation so successful
+is that we do not explicitly construct the Jacobian matrices.
+Rather, we only sequentially compute cotangent-Jacobian products in reverse mode,
+or Jacobian-tangent products in forward mode.
+
+### Tangent linear equation and forward mode AD
+
+In forward mode given the tangent vector $\dot{\psi}$ we evaluate the Jacobian-tangent product
+\begin{equation*}
+  (\psi, \dot{\psi}) \mapsto \frac{\mathrm d u(\psi)}{\mathrm d \psi} \dot{\psi},
+\end{equation*}
+that is the solution to the following linear system
+\begin{equation*}
+  \frac{\partial f}{\partial u} \left(\frac{\mathrm d u(\psi)}{\mathrm d \psi} \dot{\psi} \right) =
+  - \frac{\partial f}{\partial \psi} \cdot \dot{\psi}.
+\end{equation*}
+
+### Adjoint equation and reverse mode AD
+
+In reverse mode given the cotangent vector $\bar{\psi}$ we evaluate the Jacobian-transpose-vector product
+\begin{equation*}
+  (\psi, \bar{\psi}) \mapsto \frac{\mathrm d u(\psi)}{\mathrm d \psi}^{*} \bar{\psi},
+\end{equation*}
+that is evaluated as
+\begin{equation*}
+  \frac{\mathrm d u(\psi)}{\mathrm d \psi}^{*} \bar{\psi} = - \frac{\partial f}{\partial \psi}^{*} \cdot \lambda,
+\end{equation*}
+where $\lambda$ is the solution to the following linear system
+\begin{equation*}
+  \frac{\partial f}{\partial u}^{*} \lambda = \bar{\psi}.
+\end{equation*}
+
 ## Practical considerations
-
-
