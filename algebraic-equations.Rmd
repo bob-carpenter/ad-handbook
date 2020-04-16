@@ -167,7 +167,7 @@ Note that we could have obtained this result by using the implicit function theo
 The adjoint method however has merit in its ability to solve more complicated problems
 and in the unifying approach it provides when studying implicit functions.
 
-## Practical considerations
+## Summary of results
 
 One of the key factors that makes automatic differentiation so successful
 is that we do not explicitly construct the Jacobian matrices.
@@ -201,3 +201,4 @@ where $\lambda$ is the solution to the following linear system
   \frac{\partial f}{\partial u}^{*} \lambda = \bar{\psi}.
 \end{equation*}
 
+## Practical considerations
