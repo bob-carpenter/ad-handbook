@@ -6,14 +6,6 @@ $$
 C = A + B
 $$
 
-### Derivatives {-}
-
-$$
-\frac{\partial}{\partial A} C = 1
-\qquad
-\frac{\partial}{\partial B} C = 1
-$$
-
 ### Tangent {-}
 
 $$
@@ -28,19 +20,10 @@ $$
 \overline{B} \ \ {\small +}{=} \ \ \overline{C}
 $$
 
-
 ## Subtraction
 
 $$
 C = A - B
-$$
-
-### Derivatives {-}
-
-$$
-\frac{\partial}{\partial A} C = 1
-\qquad
-\frac{\partial}{\partial B} C = -1
 $$
 
 ### Tangent {-}
@@ -57,19 +40,10 @@ $$
 \overline{B} \ \ {\small +}{=} \ \ -\overline{C}
 $$
 
-
 ## Multiplication
 
 $$
 C = A \cdot B
-$$
-
-### Derivatives {-}
-
-$$
-\frac{\partial}{\partial A} C = B
-\qquad
-\frac{\partial}{\partial B} C = A
 $$
 
 ### Tangent {-}
@@ -92,12 +66,6 @@ $$
 C = -A
 $$
 
-### Derivatives {-}
-
-$$
-\frac{\partial}{\partial A} C = -1
-$$
-
 ### Tangent {-}
 
 $$
@@ -108,4 +76,100 @@ $$
 
 $$
 \overline{A} \ \ {\small +}{=} \ \ -\overline{C}
+$$
+
+## Inverse
+
+$$
+C = A^{-1}
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = -C \cdot \dot{A} \cdot C
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ -C^T \cdot \overline{C} \cdot C^T
+$$
+
+## Determinant
+
+$$
+C = \det{A}
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = C \cdot \textrm{Tr} \left( A^{-1} \dot{A}\right)
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C} \cdot C \cdot \left( A^{-1} \right)^T
+$$
+
+## Matrix inverse product
+
+$$
+C = A^{-1} \cdot B
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = A^{-1} \left( \dot{B} - \dot{A} \cdot C \right)
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ -\overline{B} \cdot C^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ \left( A^{-1} \right)^T \cdot \overline{C}
+$$
+
+## First quadratic form
+
+$$
+C = B^T \cdot A \cdot B
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \dot{B^T} \cdot A \cdot B + B^T \cdot \dot{A} \cdot B + B^T \cdot A \cdot \dot{B}
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ B \cdot \overline{C} \cdot B^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ A \cdot B \cdot \overline{C}^T + A^T \cdot B \cdot \overline{C}
+$$
+
+## Second quadratic form
+
+$$
+C = B^T \cdot A^{-1} \cdot B
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \dot{B^T} \cdot A^{-1} \cdot B + B^T \cdot A^{-1} \cdot \dot{A} \cdot A^{-1} \cdot B + B^T \cdot A^{-1} \cdot \dot{B}
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ -\left( A^{-1} \right)^T \cdot B \cdot \overline{C} \cdot B^T \cdot \left( A^{-1} \right)^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ A^{-1} \cdot B \cdot \overline{C}^T + \left( A^{-1} \right)^T \cdot B \cdot \overline{C}
 $$
