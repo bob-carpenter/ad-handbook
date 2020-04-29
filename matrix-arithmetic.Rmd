@@ -114,10 +114,10 @@ $$
 \overline{A} \ \ {\small +}{=} \ \ \overline{C} \cdot C \cdot \left( A^{-1} \right)^T
 $$
 
-## Matrix inverse product
+## Matrix left division
 
 $$
-C = A^{-1} \cdot B
+C = A \char`\\ B = A^{-1} \cdot B
 $$
 
 ### Tangent {-}
@@ -132,6 +132,26 @@ $$
 \overline{A} \ \ {\small +}{=} \ \ -\overline{B} \cdot C^T
 \qquad
 \overline{B} \ \ {\small +}{=} \ \ \left( A^{-1} \right)^T \cdot \overline{C}
+$$
+
+## Matrix right division
+
+$$
+C = A / B = A \cdot B^{-1}
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \left( \dot{A} - C \cdot \dot{B} \right) B^{-1}
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C} \cdot \left( B^{-1} \right)^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ -C^T \cdot \overline{A}
 $$
 
 ## First quadratic form
