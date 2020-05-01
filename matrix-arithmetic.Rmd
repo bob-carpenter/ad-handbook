@@ -6,6 +6,14 @@ $$
 C = A + B
 $$
 
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = 1
+\qquad
+\frac{\partial}{\partial B} C = 1
+$$
+
 ### Tangent {-}
 
 $$
@@ -24,6 +32,14 @@ $$
 
 $$
 C = A - B
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = 1
+\qquad
+\frac{\partial}{\partial B} C = -1
 $$
 
 ### Tangent {-}
@@ -46,6 +62,14 @@ $$
 C = A \cdot B
 $$
 
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = B
+\qquad
+\frac{\partial}{\partial B} C = A
+$$
+
 ### Tangent {-}
 
 $$
@@ -64,6 +88,12 @@ $$
 
 $$
 C = -A
+$$
+
+### Derivatives {-}
+
+$$
+\frac{\partial}{\partial A} C = -1
 $$
 
 ### Tangent {-}
