@@ -1,7 +1,7 @@
 ---
 knit: 'bookdown::render_book("index.Rmd", "tufte_html_book")'
 title: 'Automatic Differentiation Handbook'
-author: 'Bob Carpenter, Adam Haber'
+author: 'Bob Carpenter, Adam Haber, and Charles Margossian'
 date: '2020'
 bibliography: all.bib
 # biblio-style: "acm"
