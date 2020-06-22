@@ -28,7 +28,6 @@ $$
 \overline{B} \ \ {\small +}{=} \ \ \overline{C}
 $$
 
-
 ## Subtraction
 
 $$
@@ -56,7 +55,6 @@ $$
 \qquad
 \overline{B} \ \ {\small +}{=} \ \ -\overline{C}
 $$
-
 
 ## Multiplication
 
@@ -108,4 +106,120 @@ $$
 
 $$
 \overline{A} \ \ {\small +}{=} \ \ -\overline{C}
+$$
+
+## Inverse
+
+$$
+C = A^{-1}
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = -C \cdot \dot{A} \cdot C
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ -C^T \cdot \overline{C} \cdot C^T
+$$
+
+## Determinant
+
+$$
+C = \det{A}
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = C \cdot \textrm{Tr} \left( A^{-1} \dot{A}\right)
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C} \cdot C \cdot \left( A^{-1} \right)^T
+$$
+
+## Matrix left division
+
+$$
+C = A \char`\\ B = A^{-1} \cdot B
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = A^{-1} \left( \dot{B} - \dot{A} \cdot C \right)
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ -\overline{B} \cdot C^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ \left( A^{-1} \right)^T \cdot \overline{C}
+$$
+
+## Matrix right division
+
+$$
+C = A / B = A \cdot B^{-1}
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \left( \dot{A} - C \cdot \dot{B} \right) B^{-1}
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ \overline{C} \cdot \left( B^{-1} \right)^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ -C^T \cdot \overline{A}
+$$
+
+## First quadratic form
+
+$$
+C = B^T \cdot A \cdot B
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \dot{B^T} \cdot A \cdot B + B^T \cdot \dot{A} \cdot B + B^T \cdot A \cdot \dot{B}
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ B \cdot \overline{C} \cdot B^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ A \cdot B \cdot \overline{C}^T + A^T \cdot B \cdot \overline{C}
+$$
+
+## Second quadratic form
+
+$$
+C = B^T \cdot A^{-1} \cdot B
+$$
+
+### Tangent {-}
+
+$$
+\dot{C} = \dot{B^T} \cdot A^{-1} \cdot B + B^T \cdot A^{-1} \cdot \dot{A} \cdot A^{-1} \cdot B + B^T \cdot A^{-1} \cdot \dot{B}
+$$
+
+### Adjoint {-}
+
+$$
+\overline{A} \ \ {\small +}{=} \ \ -\left( A^{-1} \right)^T \cdot B \cdot \overline{C} \cdot B^T \cdot \left( A^{-1} \right)^T
+\qquad
+\overline{B} \ \ {\small +}{=} \ \ A^{-1} \cdot B \cdot \overline{C}^T + \left( A^{-1} \right)^T \cdot B \cdot \overline{C}
 $$
