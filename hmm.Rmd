@@ -8,7 +8,7 @@ distribution with $K$ components, and
 * the unobserved mixture components $z_1, \ldots, z_N \in 1:K$ form a
 Markov process.
 
-The Markov process for the mixture coponents is governed by
+The Markov process for the mixture components is governed by
 
 * an initial probability simplex $\phi \in \mathbb{R}^K$,
 * stochastic matrix $\Theta \in \mathbb{R}^{K \times K}$, and
@@ -86,7 +86,7 @@ $$
 which are column vectors formed from the prefixes of the likelihood
 function.  A final multiplication by $\textrm{1}$ yields a means to
 compute the likelihood function.  This forward algorithm may be
-automtically differentiated and the resulting derivative calculation
+automatically differentiated and the resulting derivative calculation
 also takes $\mathcal{O}(K^2 \cdot N).$ But the constant factor and
 memory usage is high, so it is more efficient to work out derivatives
 analytically.
